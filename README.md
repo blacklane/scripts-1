@@ -1,6 +1,6 @@
 # SCRIPTS
 
-All scripts that I use in my daily development
+All scripts that we use in our daily development
 
 # buildreport
 Aggregates all data from each tool report and summarize them in html format in order to use it via email. Following information is provided: 
@@ -20,7 +20,7 @@ Aggregates all data from each tool report and summarize them in html format in o
 
 Run the following command in your execute shell. That's it. If you want to compare debug builds, replace RELEASE with DEBUG. If you leave it empty, RELEASE build type will be used as default
 ```shell
-$ curl https://raw.githubusercontent.com/orhanobut/scripts/master/buildreport/build-report.sh -o build-report.sh
+$ curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/build-report.sh -o build-report.sh
 $ sh build-report.sh RELEASE
 ```
 
@@ -29,7 +29,7 @@ buildreport compares the new changes with the current codebase, therefore it tri
 sh build-report.sh RELEASE "your grep text"
 ```
 
-[For more details about buildreport](https://github.com/orhanobut/scripts/blob/master/buildreport/README.md)
+[For more details about buildreport](https://github.com/blacklane/zulu-scripts/blob/master/buildreport/README.md)
 
 # git
 Set up a git with username, email and the aliases. Invoke the following command in your terminal by adding your username and email. It will setup your git with the given parameters and will add the following aliases automatically.
@@ -55,7 +55,7 @@ git co      checkout
 Add your name and email to setup your git
 
 ```shell
-curl https://raw.githubusercontent.com/orhanobut/scripts/master/git/init-git.sh | bash -s 
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/git/init-git.sh | bash -s 
      --name <YOUR_NAME> 
      --email <YOUR_EMAIL>
 ```
