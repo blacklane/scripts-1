@@ -50,7 +50,7 @@ def generate_functional_test_results(report_path):
   write('</ul>')
 
 
-with open(REPORT_PATH + '/build-report.html', 'w+') as file:
+with open(REPORT_PATH + '/build-acceptance-report.html', 'w+') as file:
 
   functional_tests_path=REPORT_PATH+"/android-test-log.txt"
   if os.path.isfile(functional_tests_path):
@@ -58,4 +58,4 @@ with open(REPORT_PATH + '/build-report.html', 'w+') as file:
     add_header("Acceptance Tests")
     generate_functional_test_results(functional_tests_path)
 
-  print "Build report is generated at " + REPORT_PATH + "/build-report.html"
+  print "Build report is generated at " + REPORT_PATH + "/build-acceptance-report.html"
