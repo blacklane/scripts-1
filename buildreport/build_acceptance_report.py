@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import os
 import subprocess
-from apk_info import ApkInfo
 import sys
 import os.path
 
