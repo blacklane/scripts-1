@@ -15,7 +15,7 @@ then
 fi
 
 echo "Fetching build_acceptance_report.py"
-curl https://raw.githubusercontent.com/orhanobut/scripts/master/buildreport/build_acceptance_report.py -o "$REPORT_PATH/build_acceptance_report.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/build_acceptance_report.py -o "$REPORT_PATH/build_acceptance_report.py"
 
 echo "Building report"
 python "$REPORT_PATH/build_acceptance_report.py" $REPORT_PATH
