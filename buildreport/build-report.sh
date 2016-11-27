@@ -1,7 +1,22 @@
 #!/bin/bash
 
-BUILD_TYPE=$1
-COMPARE_COMMIT_GREP=$2
+BUILD_TYPE=""
+COMPARE_COMMIT_GREP=""
+PACKAGE_NAME=""
+
+while [[ $# > 0 ]]; do
+  key="$1"
+
+  if [ "$key" == "-p" ]; then
+    shift
+    readonly PACKAGE_NAME="$1"
+  elif [ -z $BUILD_TYPE ]; then
+    BUILD_TYPE=$key
+  elif [ -z $COMPARE_COMMIT_GREP ]; then
+    COMPARE_COMMIT_GREP=$key
+  fi
+  shift
+done
 
 if [ -z $BUILD_TYPE ]
   then
@@ -26,6 +41,7 @@ echo "Build type : $BUILD_TYPE"
 echo "Gradle build command : ./gradlew $GRADLE_BUILD_TYPE"
 echo "App-name : $APP_NAME"
 echo "Compare commit grep : $COMPARE_COMMIT_GREP"
+echo "Package name : $PACKAGE_NAME"
 
 REPORT_PATH="report"
 
@@ -86,4 +102,4 @@ echo "Unzipping new apk"
 unzip "$REPORT_PATH/new/app.apk" -d "$REPORT_PATH/new" >> "$REPORT_PATH/new/log.txt"
 
 echo "Building report"
-python "$REPORT_PATH/build_report.py" $REPORT_PATH
+python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME
