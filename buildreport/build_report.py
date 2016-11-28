@@ -1,11 +1,11 @@
 from bs4 import BeautifulSoup
-import os
 import subprocess
 from apk_info import ApkInfo
 import sys
 import os.path
 
 REPORT_PATH = sys.argv[1:][0]
+PACKAGE_NAME = sys.argv[1:][1] if len(sys.argv[1:]) > 1 else None
 
 
 def get_soup(url):
@@ -141,10 +141,13 @@ def apk_info_row(current, change, new, remaining):
 
 
 def generate_apk_info():
-  current_apk_info = ApkInfo.new_info('report/current')
-  new_apk_info = ApkInfo.new_info('report/new')
+  current_apk_info = ApkInfo.new_info('report/current', PACKAGE_NAME)
+  new_apk_info = ApkInfo.new_info('report/new', PACKAGE_NAME)
 
   write("<table>")
+
+  # Package name
+  write("<tr><td><b>Package name</b></td><td><td colspan=4>" + new_apk_info.package_name + "</td></td></tr>")
 
   # Method count
   method_count_text = apk_info_row(
@@ -154,6 +157,17 @@ def generate_apk_info():
       new_apk_info.remaining_method_count()
   )
   write("<tr><td><b>Method Count</b></td><td>" + method_count_text + "</td></tr>")
+
+  # Accessors count
+  current_accessors_count = current_apk_info.accessors_count()
+  new_accessors_count = new_apk_info.accessors_count()
+  accessors_count_text = apk_info_row(
+      current_accessors_count,
+      (new_accessors_count - current_accessors_count),
+      new_accessors_count,
+      "-"
+  )
+  write("<tr><td><b>Accessors Count</b></td><td>" + accessors_count_text + "</td></tr>")
 
   # APK Size
   apk_size_text = apk_info_row(
@@ -183,6 +197,11 @@ def generate_apk_info():
       write("<tr><td></td><td colspan='4'><font color='#01dc00'>[NEW] " + permission.name + "</font></td></tr>")
     else:
       write("<tr><td></td><td colspan='4'>" + permission.name + "</td></tr>")
+
+  # Accessors
+  write("<tr><td><b>Accessors</b></td><td colspan='4'></td></tr>")
+  for accessor in new_apk_info.accessors:
+    write("<tr><td></td><td colspan='4'>" + accessor + "</td></tr>")
   write("</table>")
 
 def generate_functional_test_results(report_path):
