@@ -70,10 +70,10 @@ fi
 
 
 echo "Fetching build_report.py"
-curl https://raw.githubusercontent.com/orhanobut/scripts/master/buildreport/build_report.py -o "$REPORT_PATH/build_report.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/build_report.py -o "$REPORT_PATH/build_report.py"
 
 echo "Fetching apk_info.py"
-curl https://raw.githubusercontent.com/orhanobut/scripts/master/buildreport/apk_info.py -o "$REPORT_PATH/apk_info.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/apk_info.py -o "$REPORT_PATH/apk_info.py"
 
 PR_BRANCH=$(git rev-parse --short HEAD)
 echo "PR BRANCH=$PR_BRANCH"
