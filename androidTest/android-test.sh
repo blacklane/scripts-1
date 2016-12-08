@@ -23,44 +23,42 @@ while (( "$#" )); do
 done
 
 if [[ ( $PACKAGE_NAME == "" ) || ( $APP_ID == "" ) || ( $RUNNER == "") ]]
-  then
-    echo "Required parameters are missing, --package, --app-id and --runner must be set"
-    exit 1
+then
+  echo "Required parameters are missing, --package, --app-id and --runner must be set"
+  exit 1
 fi
 
 echo "Package name under test = $PACKAGE_NAME"
 echo "App id under test = $APP_ID"
 echo "Runner for tests = $RUNNER"
 
-# Installing debug apk
-if [ ! -e app/build/outputs/apk/app-debug.apk ]
-  then
-    ./gradlew assembleDebug > /dev/null
+DEBUG_APK=app/build/outputs/apk/app-debug.apk
+TEST_APK=app/build/outputs/apk/app-debug-androidTest.apk
+
+if [ ! -e $DEBUG_APK ]
+then
+  echo "$DEBUG_APK not found, building again..."
+  ./gradlew assembleDebug &> /dev/null
 fi
-adb push app/build/outputs/apk/app-debug.apk "/data/local/tmp/$APP_ID"
+echo "Installing debug apk..."
+adb push $DEBUG_APK "/data/local/tmp/$APP_ID"
 adb shell pm install -r "/data/local/tmp/$APP_ID"
 
-# Installing test apk
-./gradlew assembleAndroidTest >> /dev/null
-adb push app/build/outputs/apk/app-debug-androidTest.apk "/data/local/tmp/$APP_ID.test"
+if [ ! -e $TEST_APK ]
+then
+  echo "Building test apk..."
+  ./gradlew assembleAndroidTest &> /dev/null
+fi
+echo "Installing test apk..."
+adb push $TEST_APK "/data/local/tmp/$APP_ID.test"
 adb shell pm install -r "/data/local/tmp/$APP_ID.test"
 
-# Running tests
-adb shell am instrument -w -r -e package "$PACKAGE_NAME" -e debug false "$APP_ID.test/$RUNNER" | tee android-test-log.txt
-
-# Generate report
-REPORT_FILE=$(echo $PACKAGE_NAME | tr '.' '_').txt
-
-grep "Time" android-test-log.txt >> $REPORT_FILE
-grep -e "OK (" android-test-log.txt >> $REPORT_FILE
-grep -e "Tests run" android-test-log.txt >> $REPORT_FILE
-sed -n "s/INSTRUMENTATION_STATUS: class=//gp" android-test-log.txt | uniq >> $REPORT_FILE
+echo "Running tests..."
+adb shell am instrument -w -e package "$PACKAGE_NAME" -e debug false "$APP_ID.test/$RUNNER" | tee android-test-log.txt
 
 if grep "OK (" android-test-log.txt
 then
-  echo "FUNCTIONAL TESTS SUCCESS"
-  echo "FUNCTIONAL TESTS SUCCESS" >> android-test-log.txt
+  echo "FUNCTIONAL TESTS SUCCESS" | tee -a android-test-log.txt
 else
-  echo "FUNCTIONAL TESTS FAILED"
-  echo "FUNCTIONAL TESTS FAILED" >> android-test-log.txt
+  echo "FUNCTIONAL TESTS FAILED" | tee -a android-test-log.txt
 fi

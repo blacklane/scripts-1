@@ -220,7 +220,7 @@ def generate_functional_test_results(report_path):
   write('<h4>' + total_test_count + '</h4>')
 
   tested_classes = subprocess.Popen(
-    'sed -n "s/INSTRUMENTATION_STATUS: class=//gp" '+ report_path +' | uniq',
+    'grep '+ PACKAGE_NAME +' '+ report_path +' ',
     shell=True,
     stdout=subprocess.PIPE
   ).stdout.read()
