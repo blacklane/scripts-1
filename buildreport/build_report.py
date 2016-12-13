@@ -19,12 +19,16 @@ def add_header(text):
 def write(text):
   file.write(text)
 
+
+def runShell(command):
+  return subprocess.Popen(
+          command,
+          shell=True,
+          stdout=subprocess.PIPE
+        ).stdout.read()
+
 def generate_pr_info():
-  commits = subprocess.Popen(
-        'git log @~.. --oneline --no-merges --pretty=%B',
-        shell=True,
-        stdout=subprocess.PIPE
-  ).stdout.read()
+  commits = runShell('git log @~.. --oneline --no-merges --pretty=%B')
   commits = commits.split('\n')
 
   write('<ul>')
@@ -198,32 +202,16 @@ def generate_apk_info():
     else:
       write("<tr><td></td><td colspan='4'>" + permission.name + "</td></tr>")
 
-  # Accessors
-  write("<tr><td><b>Accessors</b></td><td colspan='4'></td></tr>")
-  for accessor in new_apk_info.accessors:
-    write("<tr><td></td><td colspan='4'>" + accessor + "</td></tr>")
   write("</table>")
 
 def generate_functional_test_results(report_path):
-  total_elapsed_time = subprocess.Popen(
-    'grep "Time" '+ report_path +' ',
-    shell=True,
-    stdout=subprocess.PIPE
-  ).stdout.read()
+  total_elapsed_time = runShell('grep "Time" '+ report_path +' ')
   write('<h4>' + total_elapsed_time + '</h4>')
 
-  total_test_count = subprocess.Popen(
-    'grep "OK (" '+ report_path +' ',
-    shell=True,
-    stdout=subprocess.PIPE
-  ).stdout.read()
+  total_test_count = runShell('grep "OK (" '+ report_path +' ')
   write('<h4>' + total_test_count + '</h4>')
 
-  tested_classes = subprocess.Popen(
-    'grep '+ PACKAGE_NAME +' '+ report_path +' ',
-    shell=True,
-    stdout=subprocess.PIPE
-  ).stdout.read()
+  tested_classes = runShell('grep '+ PACKAGE_NAME +' '+ report_path +' ')
   tested_classes = tested_classes.split('\n')
 
   write('<ul>')
@@ -251,13 +239,13 @@ with open(REPORT_PATH + '/build-report.html', 'w+') as file:
   add_header("Checkstyle")
   generate_checkstyle_report()
 
-  print "Generating unit tests"
+  print "Generating unit test report"
   add_header("Unit Tests")
   generate_unit_tests()
 
   functional_tests_path=REPORT_PATH+"/android-test-log.txt"
   if os.path.isfile(functional_tests_path):
-    print "Generating functionals tests"
+    print "Generating functional test report"
     add_header("Functional Tests")
     generate_functional_test_results(functional_tests_path)
 

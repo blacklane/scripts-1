@@ -1,48 +1,6 @@
 #!/bin/bash
 
-BUILD_TYPE=""
-COMPARE_COMMIT_GREP=""
-PACKAGE_NAME=""
-
-while [[ $# > 0 ]]; do
-  key="$1"
-
-  if [ "$key" == "-p" ]; then
-    shift
-    readonly PACKAGE_NAME="$1"
-  elif [ -z $BUILD_TYPE ]; then
-    BUILD_TYPE=$key
-  elif [ -z $COMPARE_COMMIT_GREP ]; then
-    COMPARE_COMMIT_GREP=$key
-  fi
-  shift
-done
-
-if [ -z $BUILD_TYPE ]
-  then
-   BUILD_TYPE="RELEASE"
-fi
-
-if [ -z $COMPARE_COMMIT_GREP ]
-  then
-    COMPARE_COMMIT_GREP="Merge pull request"
-fi
-
-GRADLE_BUILD_TYPE="assembleRelease"
-APP_NAME="app-release.apk"
-
-if [ $BUILD_TYPE == "DEBUG" ]
-  then
-    GRADLE_BUILD_TYPE="assembleDebug"
-    APP_NAME="app-debug.apk"
-fi
-
-echo "Build type : $BUILD_TYPE"
-echo "Gradle build command : ./gradlew $GRADLE_BUILD_TYPE"
-echo "App-name : $APP_NAME"
-echo "Compare commit grep : $COMPARE_COMMIT_GREP"
-echo "Package name : $PACKAGE_NAME"
-
+PACKAGE_NAME=$1
 REPORT_PATH="report"
 
 rm -R "$REPORT_PATH/current/"
@@ -61,13 +19,8 @@ cp app/build/outputs/lint-results-debug.html "$REPORT_PATH/lint.html"
 echo "Copy unit tests report"
 cp app/build/reports/tests/debug/index.html "$REPORT_PATH/unittests.html"
 
-echo "Copy android instrumented tests results if exists"
-if [ -e "android-test-log.txt" ]
-then
-  cp android-test-log.txt "$REPORT_PATH/android-test-log.txt"
-fi
-
-
+echo "Copy android instrumented test results"
+cp android-test-log.txt "$REPORT_PATH/android-test-log.txt"
 
 echo "Fetching build_report.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/build_report.py -o "$REPORT_PATH/build_report.py"
@@ -75,31 +28,20 @@ curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport
 echo "Fetching apk_info.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/apk_info.py -o "$REPORT_PATH/apk_info.py"
 
-PR_BRANCH=$(git rev-parse --short HEAD)
-echo "PR BRANCH=$PR_BRANCH"
-
-MERGE_BRANCH=$(git log --merges --grep "$COMPARE_COMMIT_GREP" -1 --format=format:%h)
-echo "MERGE BRANCH=$MERGE_BRANCH"
+# copy new apk
+echo "Copying new apk"
+cp "app/build/outputs/apk/app-release.apk" "$REPORT_PATH/new/app.apk"
+echo "Unzipping new apk"
+unzip "$REPORT_PATH/new/app.apk" -d "$REPORT_PATH/new" > "$REPORT_PATH/new/log.txt"
 
 # build apk from master and fetch apk info
-git checkout $MERGE_BRANCH
-echo "Current branch = $MERGE_BRANCH"
+git checkout master
 echo "Building current apk"
-./gradlew $GRADLE_BUILD_TYPE > "$REPORT_PATH/current/log.txt"
+./gradlew clean assembleRelease > "$REPORT_PATH/current/log.txt"
 echo "Copying current apk"
-cp "app/build/outputs/apk/$APP_NAME" "$REPORT_PATH/current/app.apk"
+cp "app/build/outputs/apk/app-release.apk" "$REPORT_PATH/current/app.apk"
 echo "Unzipping current apk"
 unzip "$REPORT_PATH/current/app.apk" -d "$REPORT_PATH/current" >> "$REPORT_PATH/current/log.txt"
-
-# switch back to PR branch
-git checkout $PR_BRANCH
-echo "Current branch = $PR_BRANCH"
-echo "Building new apk"
-./gradlew clean $GRADLE_BUILD_TYPE > "$REPORT_PATH/new/log.txt"
-echo "Copying new apk"
-cp "app/build/outputs/apk/$APP_NAME" "$REPORT_PATH/new/app.apk"
-echo "Unzipping new apk"
-unzip "$REPORT_PATH/new/app.apk" -d "$REPORT_PATH/new" >> "$REPORT_PATH/new/log.txt"
 
 echo "Building report"
 python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME
