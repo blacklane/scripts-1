@@ -43,5 +43,8 @@ cp "app/build/outputs/apk/app-release.apk" "$REPORT_PATH/current/app.apk"
 echo "Unzipping current apk"
 unzip "$REPORT_PATH/current/app.apk" -d "$REPORT_PATH/current" >> "$REPORT_PATH/current/log.txt"
 
+# go back to original branch before build report
+git checkout -
+
 echo "Building report"
 python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME
