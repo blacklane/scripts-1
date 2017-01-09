@@ -5,7 +5,7 @@ APP_ID="com.blacklane.passenger.dev"
 
 EMULATOR_PORT="5554"// must be an even number between 5554-5584
 EMULATOR_ID="emulator-${EMULATOR_PORT}"
-EMULATOR_AVD="API_25_-_Acceptance_Tests"
+EMULATOR_AVD="API_25_Acceptance_Tests"
 
 start()
 def start() {
