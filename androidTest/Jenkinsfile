@@ -34,16 +34,26 @@ def testAcceptance() {
       sh "chmod +x wait_for_emulator.sh"
       sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
     }
-    stage ('Run acceptance tests') {
-      try {
-        echo "Installing apks on emulator"
-        sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug.apk"
-        sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug-androidTest.apk"
-        echo "Running tests..."
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
-      } finally {
-        sh "adb -s ${EMULATOR_ID} emu kill"
-      }
+    stage ('Installing apks') {
+      echo "Installing apks on emulator"
+      sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug.apk"
+      sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug-androidTest.apk"
+    }
+    stage ('Run login tests') {
+      echo "Running login tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
+    }
+    stage ('Run booking tests') {
+      echo "Running booking tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
+    }
+    stage ('Run registration tests') {
+      echo "Running registration tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
+    }
+    stage ('Kill emulator') {
+      echo "Killing the emulator..."
+      sh "adb -s ${EMULATOR_ID} emu kill"
     }
   }
 }
