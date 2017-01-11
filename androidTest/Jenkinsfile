@@ -23,7 +23,7 @@ def testAcceptance() {
   node('ios') {
     stage ('Clean & Git checkout') {
       deleteDir()
-      checkout(scm)
+      checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
     stage ('Assemble debug') {
