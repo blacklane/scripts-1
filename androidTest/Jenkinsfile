@@ -58,6 +58,36 @@ def testAcceptance() {
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/RegistrationTests"
     }
+    stage ('Run rides tests') {
+      echo "Running registration tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
+      echo "Copying results to Rides folder..."
+      sh "cp -r app/build/spoon results/RidesTests"
+    }
+    stage ('Run profile tests') {
+      echo "Running profile tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
+      echo "Copying results to Registration folder..."
+      sh "cp -r app/build/spoon results/ProfileTests"
+    }
+    stage ('Run payments tests') {
+      echo "Running payments tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
+      echo "Copying results to Manage Payments folder..."
+      sh "cp -r app/build/spoon results/ManagePaymentsTests"
+    }
+    stage ('Run support tests') {
+      echo "Running support tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
+      echo "Copying results to Support folder..."
+      sh "cp -r app/build/spoon results/SupportTests"
+    }
+    stage ('Run forgot password tests') {
+      echo "Running password tests..."
+      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
+      echo "Copying results to Registration folder..."
+      sh "cp -r app/build/spoon results/ForgotPasswordTests"
+    }
     stage ('Kill emulator') {
       echo "Killing the emulator..."
       sh "adb -s ${EMULATOR_ID} emu kill"
