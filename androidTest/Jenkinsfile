@@ -42,14 +42,20 @@ def testAcceptance() {
     stage ('Run login tests') {
       echo "Running login tests..."
       sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
+      echo "Copying results to Login folder..."
+      sh "cp -r app/build/spoon results/LoginTests"
     }
     stage ('Run booking tests') {
       echo "Running booking tests..."
       sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
+      echo "Copying results to Booking folder"
+      sh "cp -r app/build/spoon results/BookingTests"
     }
     stage ('Run registration tests') {
       echo "Running registration tests..."
       sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
+      echo "Copying results to Registration folder..."
+      sh "cp -r app/build/spoon results/RegistrationTests"
     }
     stage ('Kill emulator') {
       echo "Killing the emulator..."
@@ -64,8 +70,8 @@ def testAcceptance() {
  */
 def sendBuildFailureEmail(err) {
   node('ios') {
-    $subject = 'Pepper build of branch: ' + env.BRANCH_NAME + ' failed'
-    $body = '<p>Check failure using link ' + env.BUILD_URL + '</p><p>Error message: ' + err.getMessage() + '</p>'
+    $subject = 'Pepper Acceptance Tests have failed'
+    $body = '<p>Check failure using link ' + env.BUILD_URL + '</p>'
     $to = 'sofia.vistas@blacklane.com'
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
     currentBuild.result = "Failure"
