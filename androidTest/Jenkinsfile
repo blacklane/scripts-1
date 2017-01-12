@@ -34,10 +34,11 @@ def testAcceptance() {
       sh "chmod +x wait_for_emulator.sh"
       sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
     }
-    stage ('Installing apks') {
+    stage ('Installing apks and results folder') {
       echo "Installing apks on emulator"
       sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug.apk"
       sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug-androidTest.apk"
+      sh "mkdir -p results"
     }
     stage ('Run login tests') {
       echo "Running login tests..."
