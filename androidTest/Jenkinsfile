@@ -73,7 +73,7 @@ def sendBuildFailureEmail(err) {
   node('ios') {
     $subject = 'Pepper Acceptance Tests have failed'
     $body = '<p>Check failure using link ' + env.BUILD_URL + '</p>'
-    $to = 'sofia.vistas@blacklane.com'
+    $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
     currentBuild.result = "Failure"
     error(err.getMessage())
