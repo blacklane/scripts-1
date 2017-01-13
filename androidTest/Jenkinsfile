@@ -42,49 +42,81 @@ def testAcceptance() {
     }
     stage ('Run login tests') {
       echo "Running login tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Login folder..."
       sh "cp -r app/build/spoon results/LoginTests"
     }
     stage ('Run booking tests') {
       echo "Running booking tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Booking folder"
       sh "cp -r app/build/spoon results/BookingTests"
     }
     stage ('Run registration tests') {
       echo "Running registration tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/RegistrationTests"
     }
     stage ('Run rides tests') {
       echo "Running registration tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
+      } catch () {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Rides folder..."
       sh "cp -r app/build/spoon results/RidesTests"
     }
     stage ('Run profile tests') {
       echo "Running profile tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/ProfileTests"
     }
     stage ('Run payments tests') {
       echo "Running payments tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Manage Payments folder..."
       sh "cp -r app/build/spoon results/ManagePaymentsTests"
     }
     stage ('Run support tests') {
       echo "Running support tests..."
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
+      try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Support folder..."
       sh "cp -r app/build/spoon results/SupportTests"
     }
     stage ('Run forgot password tests') {
       echo "Running password tests..."
+      try {
       sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
+      } catch (err) {
+        currentStage.result =  'FAILURE'
+      }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/ForgotPasswordTests"
     }
