@@ -74,7 +74,7 @@ def testAcceptance() {
       echo "Running registration tests..."
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
-      } catch () {
+      } catch (err) {
         currentStage.result =  'FAILURE'
       }
       echo "Copying results to Rides folder..."
