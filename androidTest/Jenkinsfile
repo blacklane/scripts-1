@@ -11,7 +11,7 @@ start()
 def start() {
   try {
     testAcceptance() 
-  } catch  (err) {
+  } finally {
     sendBuildFailureEmail(err)
   }
 }
