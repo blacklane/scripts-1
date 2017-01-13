@@ -45,7 +45,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Login folder..."
       sh "cp -r app/build/spoon results/LoginTests"
@@ -55,7 +55,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Booking folder"
       sh "cp -r app/build/spoon results/BookingTests"
@@ -65,7 +65,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/RegistrationTests"
@@ -75,7 +75,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Rides folder..."
       sh "cp -r app/build/spoon results/RidesTests"
@@ -85,7 +85,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/ProfileTests"
@@ -95,7 +95,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Manage Payments folder..."
       sh "cp -r app/build/spoon results/ManagePaymentsTests"
@@ -105,7 +105,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+        
       }
       echo "Copying results to Support folder..."
       sh "cp -r app/build/spoon results/SupportTests"
@@ -115,7 +115,7 @@ def testAcceptance() {
       try {
       sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
       } catch (err) {
-        currentStage.result =  'FAILURE'
+       
       }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/ForgotPasswordTests"
