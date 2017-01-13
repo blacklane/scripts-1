@@ -9,11 +9,7 @@ EMULATOR_AVD="API_25_Acceptance_Tests"
 
 start()
 def start() {
-  try {
-    testAcceptance() 
-  } finally {
-    sendBuildFailureEmail(err)
-  }
+  testAcceptance() 
 }
 
 /**
@@ -45,7 +41,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Login folder..."
       sh "cp -r app/build/spoon results/LoginTests"
@@ -55,7 +51,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Booking folder"
       sh "cp -r app/build/spoon results/BookingTests"
@@ -65,7 +61,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/RegistrationTests"
@@ -75,7 +71,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Rides folder..."
       sh "cp -r app/build/spoon results/RidesTests"
@@ -85,7 +81,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/ProfileTests"
@@ -95,7 +91,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Manage Payments folder..."
       sh "cp -r app/build/spoon results/ManagePaymentsTests"
@@ -105,7 +101,7 @@ def testAcceptance() {
       try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
       } catch (err) {
-        
+        sendBuildFailureEmail(err)
       }
       echo "Copying results to Support folder..."
       sh "cp -r app/build/spoon results/SupportTests"
@@ -115,7 +111,7 @@ def testAcceptance() {
       try {
       sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
       } catch (err) {
-       
+       sendBuildFailureEmail(err)
       }
       echo "Copying results to Registration folder..."
       sh "cp -r app/build/spoon results/ForgotPasswordTests"
@@ -133,11 +129,10 @@ def testAcceptance() {
  */
 def sendBuildFailureEmail(err) {
   node('ios') {
-    $subject = 'Pepper Acceptance Tests have failed'
+    $subject = 'Pepper Acceptance Tests have failed on'
     $body = '<p>Check failure using link ' + env.BUILD_URL + '</p>'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
-    currentBuild.result = "Failure"
     error(err.getMessage())
   }
 }
