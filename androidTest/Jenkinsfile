@@ -37,84 +37,100 @@ def testAcceptance() {
       sh "mkdir -p results"
     }
     stage ('Run login tests') {
-      echo "Running login tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') {
+        echo "Running login tests..."
+          try {
+            sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
+          } catch (err) {
+           sendBuildFailureEmail(err)
+         }
+        echo "Copying results to Login folder..."
+        sh "cp -r app/build/spoon results/LoginTests"
       }
-      echo "Copying results to Login folder..."
-      sh "cp -r app/build/spoon results/LoginTests"
     }
     stage ('Run booking tests') {
-      echo "Running booking tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') {
+        echo "Running booking tests..."
+          try {
+           sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
+         } catch (err) {
+         sendBuildFailureEmail(err)
+        }
+        echo "Copying results to Booking folder"
+        sh "cp -r app/build/spoon results/BookingTests"
       }
-      echo "Copying results to Booking folder"
-      sh "cp -r app/build/spoon results/BookingTests"
     }
     stage ('Run registration tests') {
-      echo "Running registration tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') { 
+        echo "Running registration tests..."
+          try {
+            sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
+          } catch (err) {
+           sendBuildFailureEmail(err)
+          }
+        echo "Copying results to Registration folder..."
+        sh "cp -r app/build/spoon results/RegistrationTests"
       }
-      echo "Copying results to Registration folder..."
-      sh "cp -r app/build/spoon results/RegistrationTests"
     }
     stage ('Run rides tests') {
-      echo "Running registration tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') {
+        echo "Running rides tests..."
+        try {
+          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
+        } catch (err) {
+          sendBuildFailureEmail(err)
+        }
+        echo "Copying results to Rides folder..."
+        sh "cp -r app/build/spoon results/RidesTests"
       }
-      echo "Copying results to Rides folder..."
-      sh "cp -r app/build/spoon results/RidesTests"
     }
     stage ('Run profile tests') {
+      timeout(time: 15, unit: 'MINUTES') {
       echo "Running profile tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+        try {
+         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
+       } catch (err) {
+          sendBuildFailureEmail(err)
+        }
+        echo "Copying results to Profile folder..."
+        sh "cp -r app/build/spoon results/ProfileTests"
       }
-      echo "Copying results to Registration folder..."
-      sh "cp -r app/build/spoon results/ProfileTests"
     }
     stage ('Run payments tests') {
-      echo "Running payments tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') {
+        echo "Running payments tests..."
+        try {
+         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
+        } catch (err) {
+         sendBuildFailureEmail(err)
+        }
+       echo "Copying results to Manage Payments folder..."
+       sh "cp -r app/build/spoon results/ManagePaymentsTests"
       }
-      echo "Copying results to Manage Payments folder..."
-      sh "cp -r app/build/spoon results/ManagePaymentsTests"
     }
     stage ('Run support tests') {
-      echo "Running support tests..."
-      try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
-      } catch (err) {
-        sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') {
+        echo "Running support tests..."
+        try {
+          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
+        } catch (err) {
+         sendBuildFailureEmail(err)
+        }
+        echo "Copying results to Support folder..."
+        sh "cp -r app/build/spoon results/SupportTests"
       }
-      echo "Copying results to Support folder..."
-      sh "cp -r app/build/spoon results/SupportTests"
     }
     stage ('Run forgot password tests') {
-      echo "Running password tests..."
-      try {
-      sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
-      } catch (err) {
-       sendBuildFailureEmail(err)
+      timeout(time: 15, unit: 'MINUTES') {
+        echo "Running password tests..."
+        try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
+        } catch (err) {
+        sendBuildFailureEmail(err)
+        }
+        echo "Copying results to Forgot Password folder..."
+        sh "cp -r app/build/spoon results/ForgotPasswordTests"
       }
-      echo "Copying results to Registration folder..."
-      sh "cp -r app/build/spoon results/ForgotPasswordTests"
     }
     stage ('Kill emulator') {
       echo "Killing the emulator..."
