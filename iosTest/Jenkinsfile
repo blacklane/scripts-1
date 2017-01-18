@@ -17,7 +17,7 @@ def testAcceptance() {
       timeout(time: 30, unit: 'MINUTES') {
         echo "Running iOS tests..."
         try {
-          sh "xcodebuild -workspace Blacklane.xcworkspace -scheme AcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty --report html --output report.html"
+          sh "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty --report html --output report.html"
         } catch (err) {
           sendBuildFailureEmail(err)
         }
@@ -27,8 +27,10 @@ def testAcceptance() {
 }
 
 def end() {
-  echo "Killing the simulator..."
-  sh "killall \"Simulator\""
+  node('ios') {
+    echo "Killing the simulator..."
+    sh "killall \"Simulator\""
+  }
 }
 
 /**
