@@ -1,5 +1,8 @@
+import java.text.SimpleDateFormat
 
 start()
+end()
+
 def start() {
   testAcceptance() 
 }
@@ -23,11 +26,12 @@ def testAcceptance() {
         }
       }
     }
-    stage ('Kill simulator') {
-      echo "Killing the simulator..."
-      sh "killall \"Simulator\""
-    }
   }
+}
+
+def end() {
+  echo "Killing the simulator..."
+  sh "killall \"Simulator\""
 }
 
 /**
