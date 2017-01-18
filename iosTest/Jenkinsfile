@@ -1,4 +1,3 @@
-import java.text.SimpleDateFormat
 
 start()
 end()
@@ -16,11 +15,9 @@ def testAcceptance() {
     }
     stage ('Start iOS tests') {
       timeout(time: 30, unit: 'MINUTES') {
-        Date now = new Date()
-        SimpleDateFormat timestamp = new SimpleDateFormat("dd.mm.dd::HH:mm:ss")
         echo "Running iOS tests..."
         try {
-          sh "xcodebuild -workspace Blacklane.xcworkspace -scheme AcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty --report html --output reports/" + timestamp.format(now) + "_report.html"
+          sh "xcodebuild -workspace Blacklane.xcworkspace -scheme AcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty --report html --output report.html"
         } catch (err) {
           sendBuildFailureEmail(err)
         }
