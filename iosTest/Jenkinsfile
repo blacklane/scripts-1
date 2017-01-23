@@ -20,12 +20,7 @@ def testAcceptance() {
       timeout(time: 45, unit: 'MINUTES') {
         echo "Running iOS tests..."
         try {
-          def status = sh("xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | tee test_results.log | xcpretty --report html --output test_results.html", returnStatus: true)
-
-          if (status != 0) {
-            echo "Failure: " + status
-            sendBuildFailureEmail(0)
-          }
+          sh "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | tee test_results.log | xcpretty --report html --output test_results.html"
         } catch (err) {
           sendBuildFailureEmail(err)
         } finally {
