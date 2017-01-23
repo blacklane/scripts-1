@@ -7,6 +7,10 @@ def start() {
 
 def testAcceptance() {
   node('ios') {
+    env.LANG = "en_US.UTF-8"
+    env.LANGUAGE = "en_US.UTF-8"
+    env.LC_ALL = "en_US.UTF-8"
+
     stage ('Clean & Git checkout') {
       deleteDir()
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/cassandra/']]])
