@@ -20,10 +20,7 @@ def testAcceptance() {
       timeout(time: 45, unit: 'MINUTES') {
         echo "Running iOS tests..."
         try {
-          def status = sh("xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | " + 
-             "tee test_results.log | " + 
-             "xcpretty --report html --output test_results.html",
-             returnStatus: true)
+          def status = sh("xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | tee test_results.log | xcpretty --report html --output test_results.html", returnStatus: true)
 
           if (status != 0) {
             echo "Failure: " + status
@@ -47,7 +44,7 @@ def testAcceptance() {
 def sendBuildFailureEmail(err) {
   node('') {
     $subject = 'Cassandra Acceptance Tests have failed'
-    $body = '<p>Check failure using link ' + env.BUILD_URL + '</p><p>HTML Report: ' + env.BUILD_URL + 'execution/node/3/ws/results/report.html</p><p>Text Log Report: ' + env.BUILD_URL + 'execution/node/3/ws/results/raw_output.log</p>'
+    $body = '<p>Check failure using link ' + env.BUILD_URL + '</p><p>HTML Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.html</p><p>Text Log Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.log</p>'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
     error(err.getMessage())
