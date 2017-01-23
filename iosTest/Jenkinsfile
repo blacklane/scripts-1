@@ -14,7 +14,7 @@ def testAcceptance() {
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
     stage ('Start iOS tests') {
-      timeout(time: 30, unit: 'MINUTES') {
+      timeout(time: 45, unit: 'MINUTES') {
         echo "Running iOS tests..."
         try {
           sh "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test"
