@@ -1,6 +1,5 @@
 
 start()
-end()
 
 def start() {
   testAcceptance() 
@@ -20,16 +19,12 @@ def testAcceptance() {
           sh "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test"
         } catch (err) {
           sendBuildFailureEmail(err)
+        } finally {
+          echo "Killing the simulator..."
+          sh "killall \"Simulator\""
         }
       }
     }
-  }
-}
-
-def end() {
-  node('ios') {
-    echo "Killing the simulator..."
-    sh "killall \"Simulator\""
   }
 }
 
@@ -38,7 +33,7 @@ def end() {
  * An email will be sent to the 'committer email' on the last commit.
  */
 def sendBuildFailureEmail(err) {
-  node('ios') {
+  node('') {
     $subject = 'Cassandra Acceptance Tests have failed on'
     $body = '<p>Check failure using link ' + env.BUILD_URL + '</p>'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
