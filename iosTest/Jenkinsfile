@@ -18,13 +18,22 @@ def testAcceptance() {
     }
     stage ('Start iOS tests') {
       timeout(time: 45, unit: 'MINUTES') {
-        echo "Running iOS tests..."
+        echo 'Running iOS tests...'
         try {
-          sh "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | tee test_results.log | xcpretty --report html --output test_results.html"
+          BUILD_STATUS = sh ( 
+            script: "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | " +
+                    "tee test_results.log | " +
+                    "xcpretty --report html --output test_results.html",
+            returnStdout: true 
+          ).trim()
+          echo 'BUILD STATUS :: ' + BUILD_STATUS
+          if (BUILD_STATUS == '** TEST FAILED **') {
+            error('Acceptance test(s) failed')
+          }
         } catch (err) {
           sendBuildFailureEmail(err)
         } finally {
-          echo "Killing the simulator..."
+          echo 'Killing the simulator...'
           sh "killall \"Simulator\""
         }
       }
