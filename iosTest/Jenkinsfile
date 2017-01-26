@@ -24,9 +24,9 @@ def testAcceptance() {
             script: "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | " +
                     "tee test_results.log | " +
                     "xcpretty --report html --output test_results.html",
-            returnStatus: true 
+            returnStdout: true 
           )
-          echo 'BUILD STATUS :: ' + BUILD_STATUS
+          echo 'BUILD STATUS ::\n' + BUILD_STATUS + '\n:: BUILD_STATUS'
           if (BUILD_STATUS.contains('TEST FAILED')) {
             error('Acceptance test(s) failed')
           }
