@@ -27,7 +27,7 @@ def testAcceptance() {
             returnStatus: true 
           )
           echo 'BUILD STATUS :: ' + BUILD_STATUS
-          if (BUILD_STATUS.contains('TEST FAILED') {
+          if (BUILD_STATUS.contains('TEST FAILED')) {
             error('Acceptance test(s) failed')
           }
         } catch (err) {
