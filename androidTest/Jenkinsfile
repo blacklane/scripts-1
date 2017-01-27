@@ -1,4 +1,3 @@
-
 TEST_PACKAGE="com.blacklane.passenger.test.acceptance"
 RUNNER="com.blacklane.passenger.test.RxJUnitRunner"
 APP_ID="com.blacklane.passenger.dev"
@@ -12,10 +11,6 @@ def start() {
   try {
    testAcceptance()
   } finally {
-    echo "Killing the emulator..."
-    sh "adb -s ${EMULATOR_ID} emu kill"
-
-    if (currentBuild.result == 'FAILURE'){
       sendBuildFailureEmail()
     }
   } 
@@ -140,6 +135,10 @@ def testAcceptance() {
         echo "Copying results to Forgot Password folder..."
         sh "cp -r app/build/spoon results/ForgotPasswordTests"
       }
+    }
+    stage ('Kill emulator') {
+        echo "Killing the emulator..."
+        sh "adb -s ${EMULATOR_ID} emu kill"
     }
   }
 }
