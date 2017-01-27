@@ -26,8 +26,6 @@ def testAcceptance() {
                     "xcpretty --report html --output test_results.html",
             returnStdout: true 
           )
-          echo 'BUILD STATUS ::\n\n\n\n\n' + BUILD_STATUS + '\n\n\n\n\n:: BUILD_STATUS'
-          echo 'BUILD STATUS (2) ::\n\n\n\n\n' + BUILD_STATUS.substring(BUILD_STATUS.lastIndexOf('\n')) + '\n\n\n\n\n:: BUILD_STATUS (2)'
           if (!BUILD_STATUS.contains('0 failures')) {
             error('Acceptance test(s) failed')
           }
