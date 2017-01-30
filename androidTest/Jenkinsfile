@@ -12,9 +12,9 @@ def start() {
    testAcceptance()
   } finally {
       sendBuildFailureEmail()
-    }
-  } 
-}
+  }
+} 
+
 
 /**
  * Invoked when a pull request is created or a pull request is updated.
