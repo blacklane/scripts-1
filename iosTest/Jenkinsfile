@@ -27,7 +27,7 @@ def testAcceptance() {
             returnStdout: true 
           )
           if (BUILD_STATUS.contains("'BlacklaneAcceptanceTests.xctest' failed") ||
-              BUILD_STATUS.contains("'All tests' failed") {
+              BUILD_STATUS.contains("'All tests' failed")) {
             error('Acceptance test(s) failed')
           }
         } catch (err) {
