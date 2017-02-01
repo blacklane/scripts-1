@@ -26,8 +26,7 @@ def testAcceptance() {
                     "xcpretty --report html --output test_results.html",
             returnStdout: true 
           )
-          if (BUILD_STATUS.contains("'BlacklaneAcceptanceTests.xctest' failed") ||
-              BUILD_STATUS.contains("'All tests' failed")) {
+          if (!BUILD_STATUS.contains('0 failures') || BUILD_STATUS.contains('10 failures')) {
             error('Acceptance test(s) failed')
           }
         } catch (err) {
