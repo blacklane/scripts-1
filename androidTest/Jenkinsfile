@@ -11,7 +11,7 @@ def start() {
   try {
    testAcceptance()
   } finally {
-      sendBuildFailureEmail()
+      sendBuildEmail()
   }
 } 
 
@@ -140,6 +140,13 @@ def testAcceptance() {
         echo "Killing the emulator..."
         sh "adb -s ${EMULATOR_ID} emu kill"
     }
+    stage ('Assemble email report') {
+      echo "Sending report"
+
+      sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/email_report_builder.py -o email_report_builder.py"
+      sh "touch email-report.html"
+      sh "python email_report_builder.py"
+    }
   }
 }
 
@@ -147,10 +154,10 @@ def testAcceptance() {
  * Invoked when any build process fails.
  * An email will be sent to the 'committer email' on the last commit.
  */
-def sendBuildFailureEmail() {
+def sendBuildEmail() {
   node('ios') {
-    $subject = 'Pepper Acceptance Tests have failed on'
-    $body = '<p>Check failure using link ' + env.BUILD_URL + '</p>'
+    $subject = 'Pepper Acceptance Tests daily digest!'
+    $body = readFile 'email-report.html'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
    // error(err.getMessage())
