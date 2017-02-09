@@ -32,7 +32,7 @@ with open('email-report.html', 'w+') as file:
         test_suite = ['Booking', 'Login', 'Registration', ]
 
         for test_class in test_suite:
-            generate_table('report/' + test_class + 'Tests/debug/index.html')
+            generate_table('results/' + test_class + 'Tests/debug/index.html')
 
         print "Failure report completed"
 
