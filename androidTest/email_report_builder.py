@@ -29,7 +29,7 @@ def generate_table(report_path):
 
 with open('email-report.html', 'w+') as file:
         add_header("Failed Tests")
-        test_suite = ['Booking', 'Login', 'Registration', ]
+        test_suite = ['Booking', 'Login', 'Registration']
 
         for test_class in test_suite:
             generate_table('results/' + test_class + 'Tests/debug/index.html')
