@@ -137,8 +137,10 @@ def testAcceptance() {
       }
     }
     stage ('Kill emulator') {
+      timeout(time: 15, unit: 'MINUTES') {
         echo "Killing the emulator..."
         sh "adb -s ${EMULATOR_ID} emu kill"
+      }
     }
     stage ('Assemble email report') {
       echo "Sending report"
