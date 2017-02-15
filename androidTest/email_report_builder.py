@@ -32,7 +32,10 @@ with open('email-report.html', 'w+') as file:
         test_suite = ['Booking', 'Login', 'Registration']
 
         for test_class in test_suite:
-            generate_table('results/' + test_class + 'Tests/debug/index.html')
+            try:
+                generate_table('results/' + test_class + 'Tests/debug/index.html')
+            except IOError, e:
+                write("<p>[warning]: " + test_class + " was found with no results.</p>\n")
 
         print "Failure report completed"
 
