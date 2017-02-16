@@ -19,7 +19,7 @@ def generate_table(report_path):
     failures = []
 
     try:
-    soup = get_soup(report_path)
+        soup = get_soup(report_path)
     except IOError, e:
         write("<p>[warning]: " + test_class + " was found with no results.</p>\n")
 
