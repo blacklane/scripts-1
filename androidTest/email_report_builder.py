@@ -18,7 +18,10 @@ def write(text):
 def generate_table(report_path):
     failures = []
 
+    try:
     soup = get_soup(report_path)
+    except IOError, e:
+        write("<p>[warning]: " + test_class + " was found with no results.</p>\n")
 
     for test in soup.find_all('td', attrs={'class': 'test fail'}):
         failures.append(test.find('a')['data-content'])
@@ -32,10 +35,7 @@ with open('email-report.html', 'w+') as file:
         test_suite = ['Booking', 'Login', 'Registration']
 
         for test_class in test_suite:
-            try:
                 generate_table('results/' + test_class + 'Tests/debug/index.html')
-            except IOError, e:
-                write("<p>[warning]: " + test_class + " was found with no results.</p>\n")
 
         print "Failure report completed"
 
