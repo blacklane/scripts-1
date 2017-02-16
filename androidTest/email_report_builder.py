@@ -21,7 +21,7 @@ def generate_table(report_path):
     try:
         soup = get_soup(report_path)
     except IOError, e:
-        write("<p>[warning]: " + test_class + " was found with no results.</p>\n")
+        write("<p>[warning]: " + report_path + " was found with no results.</p>\n")
 
     for test in soup.find_all('td', attrs={'class': 'test fail'}):
         failures.append(test.find('a')['data-content'])
