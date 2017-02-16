@@ -20,11 +20,12 @@ def generate_table(report_path):
 
     try:
         soup = get_soup(report_path)
+        
+        for test in soup.find_all('td', attrs={'class': 'test fail'}):
+            failures.append(test.find('a')['data-content'])
+            
     except IOError, e:
         write("<p>[warning]: " + report_path + " was found with no results.</p>\n")
-
-    for test in soup.find_all('td', attrs={'class': 'test fail'}):
-        failures.append(test.find('a')['data-content'])
 
     for failure in failures:
         write("<p><li>" + failure + "</li><p>\n")
