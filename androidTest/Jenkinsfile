@@ -15,10 +15,6 @@ def start() {
   }
 } 
 
-
-/**
- * Invoked when a pull request is created or a pull request is updated.
- */
 def testAcceptance() {
   node('ios') {
     stage ('Clean & Git checkout') {
@@ -26,18 +22,10 @@ def testAcceptance() {
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
-    stage ('Assemble debug') {
-      sh "./gradlew assembleDebug assembleDebugAndroidTest"
-    }
-    stage ('Start emulator') {
+    stage ('Start emulator and results folder') {
       sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
       sh "chmod +x wait_for_emulator.sh"
       sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
-    }
-    stage ('Installing apks and results folder') {
-      echo "Installing apks on emulator"
-      sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug.apk"
-      sh "adb -s ${EMULATOR_ID} install -r -d app/build/outputs/apk/app-debug-androidTest.apk"
       sh "mkdir -p results"
     }
     stage ('Run login tests') {
@@ -156,16 +144,12 @@ def testAcceptance() {
   }
 }
 
-/**
- * Invoked when any build process fails.
- * An email will be sent to the 'committer email' on the last commit.
- */
 def sendBuildEmail() {
   node('ios') {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
-   // error(err.getMessage())
+ 
   }
 }
