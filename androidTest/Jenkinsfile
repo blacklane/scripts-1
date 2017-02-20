@@ -28,8 +28,10 @@ def testAcceptance() {
       sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
       sh "mkdir -p results"
     }
-    stage ('Run login tests') {
-      timeout(time: 15, unit: 'MINUTES') {
+    stage ('Run high priority tests') {
+      timeout(time: 20, unit: 'MINUTES') {
+
+        /** ---------LOGIN TESTS------------ */
         echo "Running login tests..."
           try {
             sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
@@ -38,10 +40,8 @@ def testAcceptance() {
          }
         echo "Copying results to Login folder..."
         sh "cp -r app/build/spoon results/LoginTests"
-      }
-    }
-    stage ('Run booking tests') {
-      timeout(time: 15, unit: 'MINUTES') {
+
+        /** ---------BOOKING TESTS------------ */
         echo "Running booking tests..."
           try {
            sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
@@ -50,10 +50,8 @@ def testAcceptance() {
         }
         echo "Copying results to Booking folder"
         sh "cp -r app/build/spoon results/BookingTests"
-      }
-    }
-    stage ('Run registration tests') {
-      timeout(time: 15, unit: 'MINUTES') { 
+
+        /** ---------REGISTRATION TESTS------------ */
         echo "Running registration tests..."
           try {
             sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
@@ -64,8 +62,10 @@ def testAcceptance() {
         sh "cp -r app/build/spoon results/RegistrationTests"
       }
     }
-    stage ('Run rides tests') {
-      timeout(time: 15, unit: 'MINUTES') {
+    stage ('Run medium priority tests') {
+      timeout(time: 10, unit: 'MINUTES') {
+
+        /** ---------RIDES TESTS------------ */
         echo "Running rides tests..."
         try {
           sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
@@ -74,11 +74,19 @@ def testAcceptance() {
         }
         echo "Copying results to Rides folder..."
         sh "cp -r app/build/spoon results/RidesTests"
-      }
-    }
-    stage ('Run profile tests') {
-      timeout(time: 15, unit: 'MINUTES') {
-      echo "Running profile tests..."
+
+        /** ---------HOME TESTS------------ */
+        echo "Running home tests..."
+        try {
+          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.HomeTests"
+        } catch (err) {
+          
+        }
+        echo "Copying results to Home folder..."
+        sh "cp -r app/build/spoon results/HomeTests"
+
+        /** ---------PROFILE TESTS------------ */
+        echo "Running profile tests..."
         try {
          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
        } catch (err) {
@@ -86,10 +94,8 @@ def testAcceptance() {
         }
         echo "Copying results to Profile folder..."
         sh "cp -r app/build/spoon results/ProfileTests"
-      }
-    }
-    stage ('Run payments tests') {
-      timeout(time: 15, unit: 'MINUTES') {
+
+        /** ---------PAYMENTS TESTS------------ */
         echo "Running payments tests..."
         try {
          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
@@ -98,10 +104,22 @@ def testAcceptance() {
         }
        echo "Copying results to Manage Payments folder..."
        sh "cp -r app/build/spoon results/ManagePaymentsTests"
+
+        /** ---------NAVIGATION TESTS------------ */
+        echo "Running navigation tests..."
+        try {
+         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.NavigationTests"
+        } catch (err) {
+         
+        }
+       echo "Copying results to Navigation folder..."
+       sh "cp -r app/build/spoon results/NavigationTests"
       }
     }
-    stage ('Run support tests') {
-      timeout(time: 15, unit: 'MINUTES') {
+    stage ('Run low priority tests') {
+      timeout(time: 10, unit: 'MINUTES') {
+
+        /** ---------SUPPORT TESTS------------ */
         echo "Running support tests..."
         try {
           sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
@@ -110,10 +128,8 @@ def testAcceptance() {
         }
         echo "Copying results to Support folder..."
         sh "cp -r app/build/spoon results/SupportTests"
-      }
-    }
-    stage ('Run forgot password tests') {
-      timeout(time: 15, unit: 'MINUTES') {
+
+        /** ---------FORGOT PASSWORD TESTS------------ */
         echo "Running password tests..."
         try {
         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
@@ -122,10 +138,20 @@ def testAcceptance() {
         }
         echo "Copying results to Forgot Password folder..."
         sh "cp -r app/build/spoon results/ForgotPasswordTests"
+
+        /** ---------ONBOARDING TESTS------------ */
+        echo "Running onboarding tests..."
+        try {
+        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.OnboardingTests"
+        } catch (err) {
+        
+        }
+        echo "Copying results to Onboarding folder..."
+        sh "cp -r app/build/spoon results/OnboardingTests"
       }
     }
     stage ('Kill emulator') {
-      timeout(time: 15, unit: 'MINUTES') {
+      timeout(time: 5, unit: 'MINUTES') {
         echo "Killing the emulator..."
         try {
         sh "adb -s ${EMULATOR_ID} emu kill"
