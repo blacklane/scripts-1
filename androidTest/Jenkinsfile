@@ -29,7 +29,7 @@ def testAcceptance() {
       sh "mkdir -p results"
     }
     stage ('Run high priority tests') {
-      timeout(time: 20, unit: 'MINUTES') {
+      timeout(time: 30, unit: 'MINUTES') {
 
         /** ---------LOGIN TESTS------------ */
         echo "Running login tests..."
