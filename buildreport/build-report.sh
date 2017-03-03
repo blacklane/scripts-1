@@ -14,10 +14,10 @@ echo "Copy checkstyle report"
 cp app/build/reports/checkstyle/checkstyle.html "$REPORT_PATH/checkstyle.html"
 
 echo "Copy lint report"
-cp app/build/outputs/lint-results-debug.html "$REPORT_PATH/lint.html"
+cp app/build/reports/lint-results-debug.html "$REPORT_PATH/lint.html"
 
 echo "Copy unit tests report"
-cp app/build/reports/tests/debug/index.html "$REPORT_PATH/unittests.html"
+cp app/build/reports/tests/testDebugUnitTest/index.html "$REPORT_PATH/unittests.html"
 
 echo "Copy android instrumented test results"
 cp android-test-log.txt "$REPORT_PATH/android-test-log.txt"
