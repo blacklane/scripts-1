@@ -2,9 +2,17 @@ TEST_PACKAGE="com.blacklane.passenger.test.acceptance"
 RUNNER="com.blacklane.passenger.test.RxJUnitRunner"
 APP_ID="com.blacklane.passenger.dev"
 
-EMULATOR_PORT="5554"// must be an even number between 5554-5584
-EMULATOR_ID="emulator-${EMULATOR_PORT}"
-EMULATOR_AVD="API_25_Acceptance_Tests"
+EMULATOR_PORT_ONE="5554"// must be an even number between 5554-5584
+EMULATOR_PORT_TWO="5556"// must be an even number between 5554-5584
+EMULATOR_PORT_THREE="5558"// must be an even number between 5554-5584
+
+EMULATOR_ID_ONE="emulator-${EMULATOR_PORT}"
+EMULATOR_ID_TWO="emulator-${EMULATOR_PORT}"
+EMULATOR_ID_THREE="emulator-${EMULATOR_PORT}"
+
+EMULATOR_AVD_25="API_25_Acceptance_Tests"
+EMULATOR_AVD_24="API_24_Acceptance_Tests"
+EMULATOR_AVD_23="API_23_Acceptance_Tests"
 
 start()
 def start() {
@@ -16,139 +24,29 @@ def start() {
 } 
 
 def testAcceptance() {
-  node('ios') {
+  node('iosdeploy') {
     stage ('Clean & Git checkout') {
       deleteDir()
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
-    stage ('Start emulator and results folder') {
+    stage ('Start emulators and results folder') {
       sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
       sh "chmod +x wait_for_emulator.sh"
-      sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
+      sh "./wait_for_emulator.sh ${EMULATOR_PORT_ONE} ${EMULATOR_AVD_25}"
+      sh "./wait_for_emulator.sh ${EMULATOR_PORT_TWO} ${EMULATOR_AVD_24}"
+      sh "./wait_for_emulator.sh ${EMULATOR_PORT_THREE} ${EMULATOR_AVD_23}"
       sh "mkdir -p results"
     }
-    stage ('Run high priority tests') {
-      timeout(time: 30, unit: 'MINUTES') {
+    stage ('Run tests') {
+      timeout(time: 40, unit: 'MINUTES') {
 
-        /** ---------LOGIN TESTS------------ */
-        echo "Running login tests..."
-          try {
-            sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.LoginTests"
-          } catch (err) {
-           
-         }
-        echo "Copying results to Login folder..."
-        sh "cp -r app/build/spoon results/LoginTests"
+        echo "Running acceptance tests..."
 
-        /** ---------BOOKING TESTS------------ */
-        echo "Running booking tests..."
-          try {
-           sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.BookingTests"
-         } catch (err) {
-         
-        }
-        echo "Copying results to Booking folder"
-        sh "cp -r app/build/spoon results/BookingTests"
+        sh "./gradlew spoon"
 
-        /** ---------REGISTRATION TESTS------------ */
-        echo "Running registration tests..."
-          try {
-            sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RegistrationTests"
-          } catch (err) {
-           
-          }
-        echo "Copying results to Registration folder..."
-        sh "cp -r app/build/spoon results/RegistrationTests"
-      }
-    }
-    stage ('Run medium priority tests') {
-      timeout(time: 10, unit: 'MINUTES') {
-
-        /** ---------RIDES TESTS------------ */
-        echo "Running rides tests..."
-        try {
-          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.RidesTests"
-        } catch (err) {
-          
-        }
-        echo "Copying results to Rides folder..."
-        sh "cp -r app/build/spoon results/RidesTests"
-
-        /** ---------HOME TESTS------------ */
-        echo "Running home tests..."
-        try {
-          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.HomeTests"
-        } catch (err) {
-          
-        }
-        echo "Copying results to Home folder..."
-        sh "cp -r app/build/spoon results/HomeTests"
-
-        /** ---------PROFILE TESTS------------ */
-        echo "Running profile tests..."
-        try {
-         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ProfileTests"
-       } catch (err) {
-          
-        }
-        echo "Copying results to Profile folder..."
-        sh "cp -r app/build/spoon results/ProfileTests"
-
-        /** ---------PAYMENTS TESTS------------ */
-        echo "Running payments tests..."
-        try {
-         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ManagePaymentsTests"
-        } catch (err) {
-         
-        }
-       echo "Copying results to Manage Payments folder..."
-       sh "cp -r app/build/spoon results/ManagePaymentsTests"
-
-        /** ---------NAVIGATION TESTS------------ */
-        echo "Running navigation tests..."
-        try {
-         sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.NavigationTests"
-        } catch (err) {
-         
-        }
-       echo "Copying results to Navigation folder..."
-       sh "cp -r app/build/spoon results/NavigationTests"
-      }
-    }
-    stage ('Run low priority tests') {
-      timeout(time: 10, unit: 'MINUTES') {
-
-        /** ---------SUPPORT TESTS------------ */
-        echo "Running support tests..."
-        try {
-          sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.SupportTests"
-        } catch (err) {
-         
-        }
-        echo "Copying results to Support folder..."
-        sh "cp -r app/build/spoon results/SupportTests"
-
-        /** ---------FORGOT PASSWORD TESTS------------ */
-        echo "Running password tests..."
-        try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.ForgotPasswordTests"
-        } catch (err) {
-        
-        }
-        echo "Copying results to Forgot Password folder..."
-        sh "cp -r app/build/spoon results/ForgotPasswordTests"
-
-        /** ---------ONBOARDING TESTS------------ */
-        echo "Running onboarding tests..."
-        try {
-        sh "./gradlew spoon -PspoonClassName=com.blacklane.passenger.test.acceptance.OnboardingTests"
-        } catch (err) {
-        
-        }
-        echo "Copying results to Onboarding folder..."
-        sh "cp -r app/build/spoon results/OnboardingTests"
-      }
+        echo "Copying results to the folder..."
+        sh "cp -r app/build/spoon results"
     }
     stage ('Kill emulator') {
       timeout(time: 5, unit: 'MINUTES') {
@@ -171,7 +69,7 @@ def testAcceptance() {
 }
 
 def sendBuildEmail() {
-  node('ios') {
+  node('iosdeploy') {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
