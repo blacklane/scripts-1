@@ -33,10 +33,7 @@ def generate_table(report_path):
 
 with open('email-report.html', 'w+') as file:
         add_header("Failed Tests")
-        test_suite = ['Booking', 'Login', 'Registration', 'Rides', 'ManagePayments', 'Profile', 'Support', 'ForgotPassword', 'Navigation', 'Home', 'Onboarding']
-
-        for test_class in test_suite:
-                generate_table('results/' + test_class + 'Tests/debug/index.html')
+        generate_table('results/debug/index.html')
 
         print "Failure report completed"
 
