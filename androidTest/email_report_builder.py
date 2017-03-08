@@ -33,7 +33,7 @@ def generate_table(report_path):
 
 with open('email-report.html', 'w+') as file:
         add_header("Failed Tests")
-        generate_table('results/debug/index.html')
+        generate_table('results/spoon/debug/index.html')
 
         print "Failure report completed"
 
