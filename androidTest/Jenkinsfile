@@ -19,7 +19,7 @@ def start() {
 } 
 
 def testAcceptance() {
-  node('ios') {
+  node('iosdeploy') {
     stage ('Clean & Git checkout') {
       deleteDir()
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
