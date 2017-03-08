@@ -2,17 +2,12 @@ TEST_PACKAGE="com.blacklane.passenger.test.acceptance"
 RUNNER="com.blacklane.passenger.test.RxJUnitRunner"
 APP_ID="com.blacklane.passenger.dev"
 
-EMULATOR_PORT_ONE="5554"// must be an even number between 5554-5584
-EMULATOR_PORT_TWO="5556"// must be an even number between 5554-5584
-EMULATOR_PORT_THREE="5558"// must be an even number between 5554-5584
+EMULATOR_PORT="5554"// must be an even number between 5554-5584
 
-EMULATOR_ID_ONE="emulator-${EMULATOR_PORT_ONE}"
-EMULATOR_ID_TWO="emulator-${EMULATOR_PORT_TWO}"
-EMULATOR_ID_THREE="emulator-${EMULATOR_PORT_THREE}"
+EMULATOR_ID="emulator-${EMULATOR_PORT}"
 
-EMULATOR_AVD_25="API_25_Acceptance_Tests"
-EMULATOR_AVD_24="API_24_Acceptance_Tests"
-EMULATOR_AVD_23="API_23_Acceptance_Tests"
+EMULATOR_AVD="API_25_Acceptance_Tests"
+
 
 start()
 def start() {
@@ -24,7 +19,7 @@ def start() {
 } 
 
 def testAcceptance() {
-  node('iosdeploy') {
+  node('ios') {
     stage ('Clean & Git checkout') {
       deleteDir()
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
@@ -33,9 +28,7 @@ def testAcceptance() {
     stage ('Start emulators and results folder') {
       sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
       sh "chmod +x wait_for_emulator.sh"
-      sh "./wait_for_emulator.sh ${EMULATOR_PORT_ONE} ${EMULATOR_AVD_25}"
-      sh "./wait_for_emulator.sh ${EMULATOR_PORT_TWO} ${EMULATOR_AVD_24}"
-      sh "./wait_for_emulator.sh ${EMULATOR_PORT_THREE} ${EMULATOR_AVD_23}"
+      sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
       sh "mkdir -p results"
     }
     stage ('Run tests') {
@@ -53,9 +46,7 @@ def testAcceptance() {
       timeout(time: 5, unit: 'MINUTES') {
         echo "Killing the emulator..."
         try {
-          sh "adb -s ${EMULATOR_ID_ONE} emu kill"
-          sh "adb -s ${EMULATOR_ID_TWO} emu kill"
-          sh "adb -s ${EMULATOR_ID_THREE} emu kill"  
+          sh "adb -s ${EMULATOR_ID} emu kill"
         } catch (err) {
         
         }
