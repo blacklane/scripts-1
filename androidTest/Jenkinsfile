@@ -6,9 +6,9 @@ EMULATOR_PORT_ONE="5554"// must be an even number between 5554-5584
 EMULATOR_PORT_TWO="5556"// must be an even number between 5554-5584
 EMULATOR_PORT_THREE="5558"// must be an even number between 5554-5584
 
-EMULATOR_ID_ONE="emulator-${EMULATOR_PORT}"
-EMULATOR_ID_TWO="emulator-${EMULATOR_PORT}"
-EMULATOR_ID_THREE="emulator-${EMULATOR_PORT}"
+EMULATOR_ID_ONE="emulator-${EMULATOR_PORT_ONE}"
+EMULATOR_ID_TWO="emulator-${EMULATOR_PORT_TWO}"
+EMULATOR_ID_THREE="emulator-${EMULATOR_PORT_THREE}"
 
 EMULATOR_AVD_25="API_25_Acceptance_Tests"
 EMULATOR_AVD_24="API_24_Acceptance_Tests"
@@ -53,7 +53,9 @@ def testAcceptance() {
       timeout(time: 5, unit: 'MINUTES') {
         echo "Killing the emulator..."
         try {
-        sh "adb -s ${EMULATOR_ID} emu kill"
+          sh "adb -s ${EMULATOR_ID_ONE} emu kill"
+          sh "adb -s ${EMULATOR_ID_TWO} emu kill"
+          sh "adb -s ${EMULATOR_ID_THREE} emu kill"  
         } catch (err) {
         
         }
