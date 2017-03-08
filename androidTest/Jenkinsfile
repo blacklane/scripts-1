@@ -47,6 +47,7 @@ def testAcceptance() {
 
         echo "Copying results to the folder..."
         sh "cp -r app/build/spoon results"
+      }    
     }
     stage ('Kill emulator') {
       timeout(time: 5, unit: 'MINUTES') {
