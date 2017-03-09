@@ -19,7 +19,7 @@ def start() {
 } 
 
 def testAcceptance() {
-  node('iosdeploy') {
+  node('acceptance') {
     stage ('Clean & Git checkout') {
       deleteDir()
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
@@ -65,7 +65,7 @@ def testAcceptance() {
 }
 
 def sendBuildEmail() {
-  node('iosdeploy') {
+  node('acceptance') {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
