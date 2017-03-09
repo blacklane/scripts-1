@@ -6,7 +6,7 @@ def start() {
 }
 
 def testAcceptance() {
-  node('ios') {
+  node('acceptance') {
     env.LANG = "en_US.UTF-8"
     env.LANGUAGE = "en_US.UTF-8"
     env.LC_ALL = "en_US.UTF-8"
@@ -45,7 +45,7 @@ def testAcceptance() {
  * An email will be sent to the 'committer email' on the last commit.
  */
 def sendBuildFailureEmail(err) {
-  node('') {
+  node('acceptance') {
     $subject = 'Cassandra Acceptance Tests have failed'
     $body = '<p>Check failure using link ' + env.BUILD_URL + '</p><p>HTML Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.html</p><p>Text Log Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.log</p>'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
