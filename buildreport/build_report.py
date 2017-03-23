@@ -28,7 +28,7 @@ def runShell(command):
         ).stdout.read()
 
 def generate_pr_info():
-  commits = runShell('git log @~.. --oneline --no-merges --pretty=%B')
+  commits = runShell('git log origin/master.. --oneline --pretty=%B')
   commits = commits.split('\n')
 
   write('<ul>')
