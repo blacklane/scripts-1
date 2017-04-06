@@ -8,6 +8,7 @@ import strings_resources_comparator
 import base64
 import urllib2
 from urllib2 import Request
+import importlib
 
 
 ##
@@ -31,8 +32,11 @@ from urllib2 import Request
 #                             Example: {'en': '.../res/values/strings.xml', 'de': '.../res/values-de/strings.xml',
 #                                       'fr': '.../res/values-fr/strings.xml'}
 #
-# @return A string with the report in the html format.
-def report(phraseapp_access_token, project_id, locale_keys, locale_ids_by_keys, string_files_by_keys):
+# @param report_generator_module The name of a module which generates report. Uses html_report_generator.py by default
+#
+# @return A string with the report formatted by report_generator_module.
+def report(phraseapp_access_token, project_id, locale_keys,
+           locale_ids_by_keys, string_files_by_keys, report_generator_module="localization.html_report_generator"):
   _check_parameters(phraseapp_access_token, project_id, locale_keys, locale_ids_by_keys, string_files_by_keys)
 
   _, extension = splitext(string_files_by_keys[locale_keys[0]])
@@ -55,6 +59,8 @@ def report(phraseapp_access_token, project_id, locale_keys, locale_ids_by_keys, 
     result[default_locale_key + "-" + locale_key] = diff
 
   print str(result)
+
+  return importlib.import_module(report_generator_module).generate_report(locale_keys, result)
 
 
 # Checks parameters and raises an error if a parameter is wrong
