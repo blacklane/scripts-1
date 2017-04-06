@@ -7,6 +7,7 @@ rm -R "$REPORT_PATH/current/"
 rm -R "$REPORT_PATH/new/"
 
 mkdir "$REPORT_PATH"
+mkdir "$REPORT_PATH/localization"
 mkdir "$REPORT_PATH/current"
 mkdir "$REPORT_PATH/new"
 
@@ -28,6 +29,21 @@ curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport
 echo "Fetching apk_info.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/apk_info.py -o "$REPORT_PATH/apk_info.py"
 
+echo "Fetching localization report scripts"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/__init__.py -o "$REPORT_PATH/localization/__init__.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/strings_resources_comparator.py -o "$REPORT_PATH/localization/strings_resources_comparator.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/localization_report.py -o "$REPORT_PATH/localization/localization_report.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/html_report_generator.py -o "$REPORT_PATH/localization/html_report_generator.py"
+
+
+# copy strings resources
+mkdir "$REPORT_PATH/localization/values"
+mkdir "$REPORT_PATH/localization/values-de"
+mkdir "$REPORT_PATH/localization/values-fr"
+cp "app/src/main/res/values/strings.xml" "$REPORT_PATH/localization/values/strings.xml"
+cp "app/src/main/res/values-de/strings.xml" "$REPORT_PATH/localization/values-de/strings.xml"
+cp "app/src/main/res/values-fr/strings.xml" "$REPORT_PATH/localization/values-fr/strings.xml"
+
 # copy new apk
 echo "Copying new apk"
 cp "app/build/outputs/apk/app-release.apk" "$REPORT_PATH/new/app.apk"
@@ -47,4 +63,4 @@ unzip "$REPORT_PATH/current/app.apk" -d "$REPORT_PATH/current" >> "$REPORT_PATH/
 git checkout -
 
 echo "Building report"
-python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME
+python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME $PHRASEAPP_TOKEN
