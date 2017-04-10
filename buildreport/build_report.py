@@ -3,9 +3,11 @@ import subprocess
 from apk_info import ApkInfo
 import sys
 import os.path
+from localization import localization_report
 
 REPORT_PATH = sys.argv[1:][0]
 PACKAGE_NAME = sys.argv[1:][1] if len(sys.argv[1:]) > 1 else None
+PHRASEAPP_TOKEN = sys.argv[1:][2] if len(sys.argv[1:]) > 2 else None
 
 
 def get_soup(url):
@@ -204,6 +206,25 @@ def generate_apk_info():
 
   write("</table>")
 
+
+def generate_localization_report():
+  write(localization_report.report(PHRASEAPP_TOKEN,
+                                   "c0ddb8ad16e7d904c4d94cc909d9748a",  # Phraseapp project id
+                                   ("en", "de", "fr"),
+                                   {
+                                     # Phraseapp locale ids
+                                     "en": "69296c8185628aaf3965674e5cbe58ff",
+                                     "de": "3663fcef7fed25cc0f3a27029d7d44c5",
+                                     "fr": "d2d8245a6c42e3873275a8aee88203b0"
+                                   },
+                                   {
+                                     "en": REPORT_PATH + "/localization/values/strings.xml",
+                                     "de": REPORT_PATH + "/localization/values-de/strings.xml",
+                                     "fr": REPORT_PATH + "/localization/values-fr/strings.xml",
+                                   })
+        )
+
+
 def generate_functional_test_results(report_path):
   total_elapsed_time = runShell('grep "Time" '+ report_path +' ')
   write('<h4>' + total_elapsed_time + '</h4>')
@@ -224,12 +245,21 @@ def generate_functional_test_results(report_path):
 
 with open(REPORT_PATH + '/build-report.html', 'w+') as file:
   print "Generating pull request info"
+  write('<html lang="en"><head><meta charset="UTF-8"></head><body>')
+
   add_header("Pull Request Info")
   generate_pr_info()
 
   print "Generating APK info (release)"
   add_header("APK Info (release)")
   generate_apk_info()
+
+  if PHRASEAPP_TOKEN is None:
+    print "phrase app access token is not set"
+  else:
+    print "Generating localization report"
+    add_header("Localisation Report")
+    generate_localization_report()
 
   print "Generating lint report"
   add_header("Lint")
@@ -250,3 +280,4 @@ with open(REPORT_PATH + '/build-report.html', 'w+') as file:
     generate_functional_test_results(functional_tests_path)
 
   print "Build report is generated at " + REPORT_PATH + "/build-report.html"
+  write('</body></html>')
