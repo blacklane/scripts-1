@@ -106,7 +106,7 @@ def _read_xml(path):
 
   strings_dict = {}
   for child in resources:
-    if child.tag == "string":
+    if child.tag == "string" and child.text:  # Don't save empty strings
       if "name" in child.attrib:
         strings_dict[child.attrib["name"]] = child.text  # Put a string resource to the name-value dictionary
       else:
@@ -129,6 +129,10 @@ def _read_ios_strings(path):
       if not len(line) == 0 and line.find('/*') < 0:  # Silly check for empty and commented lines.
         key = _find_first_match('"(?:[^\\"]|\\.)*"(?=\s*=)', line, "Can't find string's key in line : " + line)
         value = _find_first_match('"(?:[^\\"]|\\.)*"(?=;)', line, "Can't find string's value in line : " + line)
+
+        # We parse strings with double quotes. Remove them
+        key = key[1:len(key) - 1]
+        value = value[1:len(value) - 1]
         if len(key) > 0 and len(value) > 0:
           strings_dict[key] = value
 
