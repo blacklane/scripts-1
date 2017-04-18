@@ -17,7 +17,7 @@ def testAcceptance() {
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
     stage ('Start iOS tests') {
-      timeout(time: 60, unit: 'MINUTES') {
+      timeout(time: 90, unit: 'MINUTES') {
         echo 'Running iOS tests...'
         try {
           BUILD_STATUS = sh ( 
