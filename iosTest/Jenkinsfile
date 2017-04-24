@@ -26,10 +26,12 @@ def testAcceptance() {
                     "xcpretty --report html --output test_results.html",
             returnStdout: true 
           )
-          if (BUILD_STATUS.contains("Test Suite 'BlacklaneAcceptanceTests.xctest' failed")) {
+          if (BUILD_STATUS.contains("failed")) {
+            echo 'Acceptance test(s) failed'
             error('Acceptance test(s) failed')
           }
         } catch (err) {
+          echo 'Sending build failure email'
           sendBuildFailureEmail(err)
         } finally {
           echo 'Killing the simulator...'
