@@ -43,6 +43,8 @@ def generate_pr_info():
 def generate_lint_report():
   soup = get_soup(REPORT_PATH + "/lint.html")
   table = soup.find('table', attrs={'class': 'overview'})
+  if table is None:
+    return
 
   categories = table.find_all('td', attrs={'class': 'categoryColumn'})
   for category in categories:
