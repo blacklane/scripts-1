@@ -21,9 +21,10 @@ def testAcceptance() {
         echo 'Running iOS tests...'
         try {
           BUILD_STATUS = sh ( 
-            script: "xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests -destination 'platform=iOS Simulator,name=iPhone 7' test | " +
+            script: "bash -l -c \"xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests " +
+                    "-destination 'platform=iOS Simulator,name=iPhone 7' test | " +
                     "tee test_results.log | " +
-                    "xcpretty --report html --output test_results.html",
+                    "xcpretty --report html --output test_results.html\"",
             returnStdout: true 
           )
           if (BUILD_STATUS.contains("failed")) {
