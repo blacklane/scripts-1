@@ -7,7 +7,10 @@ from localization import localization_report
 
 REPORT_PATH = sys.argv[1:][0]
 PACKAGE_NAME = sys.argv[1:][1] if len(sys.argv[1:]) > 1 else None
-PHRASEAPP_TOKEN = sys.argv[1:][2] if len(sys.argv[1:]) > 2 else None
+GITHUB_TOKEN = sys.argv[1:][2] if len(sys.argv[1:]) > 2 else None
+REPO = sys.argv[1:][3] if len(sys.argv[1:]) > 3 else None
+BRANCH_NAME = sys.argv[1:][4] if len(sys.argv[1:]) > 4 else None
+PHRASEAPP_TOKEN = sys.argv[1:][5] if len(sys.argv[1:]) > 5 else None
 
 
 def get_soup(url):
@@ -210,7 +213,7 @@ def generate_apk_info():
 
 
 def generate_localization_report():
-  write(localization_report.report(PHRASEAPP_TOKEN,
+  write(localization_report.report(GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN,
                                    "c0ddb8ad16e7d904c4d94cc909d9748a",  # Phraseapp project id
                                    ("en", "de", "fr"),
                                    {

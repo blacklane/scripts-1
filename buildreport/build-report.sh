@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PACKAGE_NAME=$1
+REPO_NAME=$2
 REPORT_PATH="report"
 
 rm -R "$REPORT_PATH/current/"
@@ -34,6 +35,7 @@ curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/strings_resources_comparator.py -o "$REPORT_PATH/localization/strings_resources_comparator.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/localization_report.py -o "$REPORT_PATH/localization/localization_report.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/html_report_generator.py -o "$REPORT_PATH/localization/html_report_generator.py"
+curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/localization/result_checker.py -o "$REPORT_PATH/localization/result_checker.py"
 
 
 # copy strings resources
@@ -63,4 +65,4 @@ unzip "$REPORT_PATH/current/app.apk" -d "$REPORT_PATH/current" >> "$REPORT_PATH/
 git checkout -
 
 echo "Building report"
-python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME $PHRASEAPP_TOKEN
+python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME $GITHUB_TOKEN $REPO_NAME $BRANCH_NAME $PHRASEAPP_TOKEN

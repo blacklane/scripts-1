@@ -9,6 +9,7 @@ import base64
 import urllib2
 from urllib2 import Request
 import importlib
+import result_checker
 
 
 ##
@@ -16,6 +17,9 @@ import importlib
 # Compares the default locale string keys with other locales.
 # Generates report.
 #
+# @param github_token A token for Github
+# @param repo A github repository
+# @param branch_name The name of a pull request branch
 # @param phraseapp_access_token An access token for Phraseapp
 # @param project_id The id of a project on Phraseapp
 # @param locale_keys A tuple which contains locale keys. These keys are used to find corresponding files in
@@ -35,7 +39,7 @@ import importlib
 # @param report_generator_module The name of a module which generates report. Uses html_report_generator.py by default
 #
 # @return A string with the report formatted by report_generator_module.
-def report(phraseapp_access_token, project_id, locale_keys,
+def report(github_token, repo, branch_name, phraseapp_access_token, project_id, locale_keys,
            locale_ids_by_keys, string_files_by_keys, report_generator_module="localization.html_report_generator"):
   _check_parameters(phraseapp_access_token, project_id, locale_keys, locale_ids_by_keys, string_files_by_keys)
 
@@ -43,6 +47,7 @@ def report(phraseapp_access_token, project_id, locale_keys,
 
   sandbox_path = _create_sandbox()
   result = {}
+  # Find differences between phraseapp keys and keys in the code
   for locale_key in locale_keys:
     locale_id = locale_ids_by_keys[locale_key]
     phraseapp_file_path = _pull_file_from_phraseapp(sandbox_path, phraseapp_access_token, project_id,
@@ -52,6 +57,7 @@ def report(phraseapp_access_token, project_id, locale_keys,
 
   shutil.rmtree(sandbox_path)
 
+  # Find strings which don't have translations in the app
   default_locale_key = locale_keys[0]
   for locale_key in locale_keys[1:]:
     diff = strings_resources_comparator.diff(string_files_by_keys[default_locale_key], string_files_by_keys[locale_key])
@@ -59,6 +65,9 @@ def report(phraseapp_access_token, project_id, locale_keys,
     result[default_locale_key + "-" + locale_key] = diff
 
   print str(result)
+
+  # Check result
+  result_checker.fail_if_not_all_keys_added_on_phraseapp(locale_keys, result, github_token, repo, branch_name)
 
   return importlib.import_module(report_generator_module).generate_report(locale_keys, result)
 
