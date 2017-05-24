@@ -1,8 +1,42 @@
 #!/bin/bash
 
-PACKAGE_NAME=$1
-REPO_NAME=$2
+PACKAGE_NAME=""
+REPO_NAME=""
 REPORT_PATH="report"
+
+# Handle arguments
+while [[ $# > 0 ]]; do
+    key="$1"
+
+    case $key in
+        -h|--help)
+            echo "build-report --package package --repo repo"
+            exit 0
+        ;;
+        --package)
+            shift
+            readonly PACKAGE_NAME="$1"
+        ;;
+        --repo)
+            shift
+            readonly REPO_NAME="$1"
+        ;;
+        *)
+            echo "Unknown option $1"
+            exit 1
+        ;;
+    esac
+    shift
+done
+
+# Validate arguments
+if [[ -z ${PACKAGE_NAME} ]]; then
+    echo "package is empty or invalid."
+    exit 1
+elif [[ -z ${REPO_NAME} ]]; then
+    echo "repo is empty or invalid."
+    exit 1
+fi
 
 rm -R "$REPORT_PATH/current/"
 rm -R "$REPORT_PATH/new/"
@@ -65,4 +99,4 @@ unzip "$REPORT_PATH/current/app.apk" -d "$REPORT_PATH/current" >> "$REPORT_PATH/
 git checkout -
 
 echo "Building report"
-python "$REPORT_PATH/build_report.py" $REPORT_PATH $PACKAGE_NAME $GITHUB_TOKEN $REPO_NAME $BRANCH_NAME $PHRASEAPP_TOKEN
+python "$REPORT_PATH/build_report.py" --report=$REPORT_PATH --package=$PACKAGE_NAME --githubtoken=$GITHUB_TOKEN --repo=$REPO_NAME --branch=$BRANCH_NAME --phraseapptoken=$PHRASEAPP_TOKEN
