@@ -1,3 +1,5 @@
+import getopt
+
 from bs4 import BeautifulSoup
 import subprocess
 from apk_info import ApkInfo
@@ -5,9 +7,50 @@ import sys
 import os.path
 from localization import localization_report
 
-REPORT_PATH = sys.argv[1:][0]
-PACKAGE_NAME = sys.argv[1:][1] if len(sys.argv[1:]) > 1 else None
-PHRASEAPP_TOKEN = sys.argv[1:][2] if len(sys.argv[1:]) > 2 else None
+REPORT_PATH = ''
+PACKAGE_NAME = ''
+GITHUB_TOKEN = ''
+REPO = ''
+BRANCH_NAME = ''
+PHRASEAPP_TOKEN = ''
+
+
+def read_args(argv):
+  global REPORT_PATH, PACKAGE_NAME, GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN
+
+  (opts, args) = getopt.getopt(argv, 'h:', [
+    'report=',
+    'package=',
+    'githubtoken=',
+    'repo=',
+    'branch=',
+    'phraseapptoken=',
+  ])
+
+  for (opt, arg) in opts:
+    if opt == '--report':
+      REPORT_PATH = arg
+    elif opt == '--package':
+      PACKAGE_NAME = arg
+    elif opt == '--githubtoken':
+      GITHUB_TOKEN = arg
+    elif opt == '--repo':
+      REPO = arg
+    elif opt == '--branch':
+      BRANCH_NAME = arg
+    elif opt == '--phraseapptoken':
+      PHRASEAPP_TOKEN = arg
+
+  check_required_args(((REPORT_PATH, 'report'), (PACKAGE_NAME, 'package'),
+                       (GITHUB_TOKEN, 'githubtoken'), (REPO, 'repo'),
+                       (BRANCH_NAME, 'branch'), (PHRASEAPP_TOKEN, 'phraseapptoken')))
+
+
+def check_required_args(arg_value_name_pairs):
+  for pair in arg_value_name_pairs:
+    if not pair[0]:
+      print pair[1], 'is empty or invalid'
+      sys.exit(1)
 
 
 def get_soup(url):
@@ -210,7 +253,7 @@ def generate_apk_info():
 
 
 def generate_localization_report():
-  write(localization_report.report(PHRASEAPP_TOKEN,
+  write(localization_report.report(GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN,
                                    "c0ddb8ad16e7d904c4d94cc909d9748a",  # Phraseapp project id
                                    ("en", "de", "fr"),
                                    {
@@ -243,6 +286,10 @@ def generate_functional_test_results(report_path):
       continue
     write('<li>' + tested_class + '</li>')
   write('</ul>')
+
+
+if __name__ == '__main__':
+  read_args(sys.argv[1:])
 
 
 with open(REPORT_PATH + '/build-report.html', 'w+') as file:
