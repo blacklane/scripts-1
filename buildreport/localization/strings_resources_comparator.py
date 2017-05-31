@@ -12,7 +12,6 @@ SAME_KEY_DIFFERENT_VALUES = "SAME_KEY_DIFFERENT_VALUES"
 ##
 # Finds differences in two string resources files.
 # Can handle android's string.xml files and ios' Localizable.strings files
-# (!) Can't handle multiline comments in .strings files
 #
 # @param first_file_path A full path to the first .xml or .strings file
 # @param second_file_path A full path to the second .xml or .strings file
@@ -126,7 +125,7 @@ def _read_ios_strings(path):
   with codecs.open(path, 'r', encoding='utf-16') as strings_file:
     for line in strings_file:
       line = line.strip()
-      if not len(line) == 0 and line.find('/*') < 0:  # Silly check for empty and commented lines.
+      if len(line) != 0 and line.find('"') == 0:
         key = _find_first_match('"(?:[^\\"]|\\.)*"(?=\s*=)', line, "Can't find string's key in line : " + line)
         value = _find_first_match('"(?:[^\\"]|\\.)*"(?=;)', line, "Can't find string's value in line : " + line)
 
