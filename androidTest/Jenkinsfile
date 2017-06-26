@@ -44,16 +44,6 @@ def testAcceptance() {
         sh "cp -r app/build/spoon results"
       }    
     }
-    stage ('Kill emulator') {
-      timeout(time: 5, unit: 'MINUTES') {
-        echo "Killing the emulator..."
-        try {
-          sh "adb -s ${EMULATOR_ID} emu kill"
-        } catch (err) {
-        
-        }
-      }
-    }
     stage ('Assemble email report') {
       echo "Sending report"
 
