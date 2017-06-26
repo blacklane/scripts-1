@@ -27,7 +27,7 @@ def testAcceptance() {
                     "xcpretty --report html --output test_results.html\"",
             returnStdout: true 
           )
-          if (BUILD_STATUS.contains("failed")) {
+          if (BUILD_STATUS.EQUALSIGNORECASE("failed")) {
             echo 'Acceptance test(s) failed'
             error('Acceptance test(s) failed')
           }
