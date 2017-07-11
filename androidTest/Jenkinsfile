@@ -55,7 +55,7 @@ def testAcceptance() {
 }
 
 def sendBuildEmail() {
-  node('acceptance') {
+  node('androidtests') {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
