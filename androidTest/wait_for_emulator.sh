@@ -8,7 +8,9 @@ start_time=`date +%s`
 printf "Launching $EMULATOR_ID..\n"
 
 adb start-server
+printf "adb server started"
 emulator @${EMULATOR_AVD} -port ${EMULATOR_PORT} &> .emulator_log.txt &
+printf "Waiting for device"
 adb -s ${EMULATOR_ID} wait-for-device
 
 printf "adb connected. waiting for bootanim.."
