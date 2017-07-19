@@ -11,28 +11,45 @@ EMULATOR_AVD="Nexus_5X_API_25_Acceptance_Tests"
 
 start()
 def start() {
+  usenode = 'device'
   try {
-   testAcceptance()
+    timeout(time: 5, unit: 'SECONDS') {
+      node (usenode) {
+        nodeTest()
+      }
+    }
+  } catch (err) {
+    usenode = 'androidtests'
+  }
+
+  try {
+    testAcceptance(usenode)
   } finally {
-      sendBuildEmail()
+    sendBuildEmail(usenode)
   }
 } 
 
-def testAcceptance() {
-  node('androidtests') {
+def testAcceptance(usenode) {
+  node(usenode) {
     stage ('Clean & Git checkout') {
       deleteDir()
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/pepper/']]])
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
-    stage ('Start emulators and results folder') {
-      sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
-      sh "chmod +x wait_for_emulator.sh"
-      sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
-      sh "mkdir -p results"
+
+    deviceId = getRealDeviceId()
+    if (deviceId == null || deviceId.size() == 0) {
+      // Start emulator only if there isn't connected device
+      stage ('Start emulators') {
+        sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
+        sh "chmod +x wait_for_emulator.sh"
+        sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
+      }
     }
-    stage ('Run tests') {
+
+    stage ('Create results folder and Run tests') {
       timeout(time: 40, unit: 'MINUTES') {
+        sh "mkdir -p results"
 
         echo "Running acceptance tests..."
         try {
@@ -54,12 +71,30 @@ def testAcceptance() {
   }
 }
 
-def sendBuildEmail() {
-  node('androidtests') {
+def getRealDeviceId() {
+  devices = sh (
+    script: 'adb devices',
+    returnStdout: true
+  ).trim().split('\n')
+
+  for (device in devices) {
+    if (!device.contains("emulator") && !device.contains("List")) {
+      return device.split('\t')[0]
+    }
+  }
+
+  return ""
+}
+
+def sendBuildEmail(usenode) {
+  node(usenode) {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
- 
   }
+}
+
+def nodeTest() {
+  sh 'echo alive on $(hostname)'
 }
