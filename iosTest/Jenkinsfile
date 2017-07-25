@@ -2,7 +2,11 @@
 start()
 
 def start() {
-  testAcceptance() 
+  try {
+    testAcceptance() 
+  } finally {
+    sendBuildEmail()
+  }
 }
 
 def testAcceptance() {
@@ -16,6 +20,7 @@ def testAcceptance() {
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/cassandra/']]])
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
+
     stage ('Start iOS tests') {
       timeout(time: 90, unit: 'MINUTES') {
         echo 'Running iOS tests...'
@@ -27,13 +32,8 @@ def testAcceptance() {
                     "xcpretty --report html --output test_results.html\"",
             returnStdout: true 
           )
-          if (BUILD_STATUS.EQUALSIGNORECASE("failed")) {
-            echo 'Acceptance test(s) failed'
-            error('Acceptance test(s) failed')
-          }
         } catch (err) {
-          echo 'Sending build failure email'
-          sendBuildFailureEmail(err)
+
         } finally {
           echo 'Killing the simulator...'
           sh "killall \"Simulator\""
@@ -44,15 +44,13 @@ def testAcceptance() {
 }
 
 /**
- * Invoked when any build process fails.
- * An email will be sent to the 'committer email' on the last commit.
+ * Notify listed users of test run results
  */
-def sendBuildFailureEmail(err) {
+def sendBuildEmail() {
   node('acceptance') {
-    $subject = 'Cassandra Acceptance Tests have failed'
-    $body = '<p>Check failure using link ' + env.BUILD_URL + '</p><p>HTML Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.html</p><p>Text Log Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.log</p>'
+    $subject = 'Cassandra Acceptance Tests: Daily Report'
+    $body = '<p>Check results using link ' + env.BUILD_URL + '</p><p>HTML Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.html</p><p>Text Log Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.log</p>'
     $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
-    error(err.getMessage())
   }
 }
