@@ -25,12 +25,12 @@ def fail_if_not_all_keys_added_on_phraseapp(locale_keys, result, github_token, r
     raise PhraseappError(comment)
 
 
-def _get_issue_url(token, repo, branch_name):
+def _get_issue_url(github_token, repo, branch_name):
   url = "https://api.github.com/repos/blacklane/{0}/pulls?head=blacklane:{1}".format(repo, branch_name)
   print "Get PR info from github url : " + url
 
   pull_requests_result = urllib2.urlopen(
-    Request(url, headers={"Authorization": "Basic " + token})
+    Request(url, headers={"Authorization": "token " + github_token})
   )
   pull_requests_json = json.load(pull_requests_result)
 
@@ -41,7 +41,7 @@ def _get_issue_url(token, repo, branch_name):
     return None
 
 
-def _send_comment(token, issue_url, comment):
+def _send_comment(github_token, issue_url, comment):
   if issue_url is None:
     return
 
@@ -50,7 +50,7 @@ def _send_comment(token, issue_url, comment):
 
   print "Post comment : {0} Body : {1}".format(url, body)
   comment_result = urllib2.urlopen(
-    Request(url, body, headers={"Authorization": "Basic " + token, "Content-Type": "application/json"})
+    Request(url, body, headers={"Authorization": "token " + github_token, "Content-Type": "application/json"})
   )
 
   if comment_result.getcode() == 201:
