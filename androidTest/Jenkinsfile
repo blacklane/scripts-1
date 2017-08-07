@@ -11,7 +11,7 @@ EMULATOR_AVD="API_25_Acceptance_Tests"
 
 start()
 def start() {
-  usenode = 'device'
+  usenode = 'acceptance'
   try {
     timeout(time: 5, unit: 'SECONDS') {
       node (usenode) {
