@@ -15,7 +15,7 @@ def add_header(text, report_path):
         stats = table.find_all('p')[0]
         file.write('<b>' + str(stats) + '</b>')
 
-    except IOError e:
+    except IOError, e:
         write("<p>[warning]: " + report_path + " was found with no results.</p>\n")
         
     file.write('<p>Here are the tests that failed: </p>')
