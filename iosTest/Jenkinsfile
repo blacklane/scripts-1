@@ -27,7 +27,7 @@ def testAcceptance() {
         try {
           BUILD_STATUS = sh ( 
             script: "bash -l -c \"xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests " +
-                    "-destination 'platform=iOS Simulator,name=iPhone 6 (iOS 10.3)' test | " +
+                    "-destination 'platform=iOS Simulator,name=iPhone 6 (iOS 10.3),OS=10.3.1' test | " +
                     "tee test_results.log | " +
                     "xcpretty --report html --output test_results.html\"",
             returnStdout: true 
