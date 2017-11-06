@@ -1,0 +1,83 @@
+TEST_PACKAGE="com.blacklane.driver.test.acceptance"
+RUNNER="com.blacklane.driver.test.RxJUnitRunner"
+APP_ID="com.blacklane.driver.dev"
+
+EMULATOR_PORT="5554"// must be an even number between 5554-5584
+
+EMULATOR_ID="emulator-${EMULATOR_PORT}"
+
+EMULATOR_AVD="API_25_Acceptance_Tests"
+
+
+start()
+def start() {
+  usenode = 'acceptance'
+  try {
+    timeout(time: 5, unit: 'SECONDS') {
+      node (usenode) {
+        nodeTest()
+      }
+    }
+  } catch (err) {
+    usenode = 'androidtests'
+  }
+
+  try {
+    testAcceptance(usenode)
+  } finally {
+    sendBuildEmail(usenode)
+  }
+}
+
+def testAcceptance(usenode) {
+  node(usenode) {
+    stage ('Clean & Git checkout') {
+      deleteDir()
+      checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/salt/']]])
+      echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
+    }
+
+
+    // Start emulator only if there isn't connected device
+    stage ('Start emulators') {
+      sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
+      sh "chmod +x wait_for_emulator.sh"
+      sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
+     }
+
+    stage ('Create results folder and Run tests') {
+      timeout(time: 40, unit: 'MINUTES') {
+        sh "mkdir -p results"
+
+        echo "Running acceptance tests..."
+        try {
+          sh "./gradlew spoon"
+        } catch(err) {
+
+        }
+        echo "Copying results to the folder..."
+        sh "cp -r app/build/spoon results"
+      }
+    }
+    stage ('Assemble email report') {
+      echo "Sending report"
+
+      sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/email_report_builder.py -o email_report_builder.py"
+      sh "touch email-report.html"
+      sh "python email_report_builder.py"
+    }
+  }
+}
+
+def sendBuildEmail(usenode) {
+  node(usenode) {
+    $subject = 'Salt Acceptance Tests daily digest!'
+    $body = readFile 'email-report.html'
+    $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
+    emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
+  }
+}
+
+def nodeTest() {
+  sh 'echo alive on $(hostname)'
+}
