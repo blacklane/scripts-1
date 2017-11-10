@@ -79,6 +79,7 @@ mkdir "$REPORT_PATH/localization/values-fr"
 cp "app/src/main/res/values/strings.xml" "$REPORT_PATH/localization/values/strings.xml"
 cp "app/src/main/res/values-de/strings.xml" "$REPORT_PATH/localization/values-de/strings.xml"
 cp "app/src/main/res/values-fr/strings.xml" "$REPORT_PATH/localization/values-fr/strings.xml"
+cp ".phraseapp.yml" "$REPORT_PATH/localization"
 
 # copy new apk
 echo "Copying new apk"
