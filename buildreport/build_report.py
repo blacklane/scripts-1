@@ -6,6 +6,8 @@ from apk_info import ApkInfo
 import sys
 import os.path
 from localization import localization_report
+import yaml  # pip install PyYAML
+
 
 REPORT_PATH = ''
 PACKAGE_NAME = ''
@@ -84,7 +86,11 @@ def generate_pr_info():
   write('</ul>')
 
 def generate_lint_report():
-  soup = get_soup(REPORT_PATH + "/lint.html")
+  lint_report_path = REPORT_PATH + "/lint.html"
+  if not os.path.isfile(lint_report_path):
+    return
+
+  soup = get_soup(lint_report_path)
   table = soup.find('table', attrs={'class': 'overview'})
   if table is None:
     return
@@ -113,7 +119,11 @@ def generate_lint_report():
 
 
 def generate_checkstyle_report():
-  soup = get_soup(REPORT_PATH + "/checkstyle.html")
+  checkstyle_report_path = REPORT_PATH + "/checkstyle.html"
+  if not os.path.isfile(checkstyle_report_path):
+    return
+
+  soup = get_soup(checkstyle_report_path)
 
   table = soup.find('table', attrs={'class': 'log'})
   table.attrs = None
@@ -253,21 +263,48 @@ def generate_apk_info():
 
 
 def generate_localization_report():
+  project_id, locale_keys_tuple, phraseapp_locale_ids_dict, report_paths_dict = _parse_phraseapp_yaml()
   write(localization_report.report(GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN,
-                                   "c0ddb8ad16e7d904c4d94cc909d9748a",  # Phraseapp project id
-                                   ("en", "de", "fr"),
-                                   {
-                                     # Phraseapp locale ids
-                                     "en": "69296c8185628aaf3965674e5cbe58ff",
-                                     "de": "3663fcef7fed25cc0f3a27029d7d44c5",
-                                     "fr": "d2d8245a6c42e3873275a8aee88203b0"
-                                   },
-                                   {
-                                     "en": REPORT_PATH + "/localization/values/strings.xml",
-                                     "de": REPORT_PATH + "/localization/values-de/strings.xml",
-                                     "fr": REPORT_PATH + "/localization/values-fr/strings.xml",
-                                   })
+                                   project_id,  # Phraseapp project id
+                                   locale_keys_tuple,  # ("en", "de", "fr")
+                                   phraseapp_locale_ids_dict,  # Phraseapp locale ids
+                                   report_paths_dict)
         )
+
+
+def _parse_phraseapp_yaml():
+  with open(REPORT_PATH + "/localization/.phraseapp.yml", 'r') as stream:
+    loaded_yaml = yaml.load(stream)
+    project_id = loaded_yaml["phraseapp"]["project_id"]
+    pull_targets = loaded_yaml["phraseapp"]["pull"]["targets"]
+
+    locale_keys = []
+    phraseapp_locale_ids_dict = {}
+    report_paths_dict = {}
+    for target in pull_targets:
+      target_file = target["file"]
+      locale_key, is_default = _get_localization_key(target_file)
+      locale_keys.append(locale_key)
+      phraseapp_locale_ids_dict[locale_key] = target["params"]["locale_id"]
+      report_paths_dict[locale_key] = REPORT_PATH + "/localization/values{0}/strings.xml"\
+        .format("" if is_default else "-" + locale_key)
+
+    locale_keys_tuple = tuple(locale_keys)
+    print "project_id = {0}".format(project_id)
+    print "locale keys = {0}".format(locale_keys_tuple)
+    print "phraseapp locales ids = {0}".format(phraseapp_locale_ids_dict)
+    print "report paths = {0}".format(report_paths_dict)
+
+    return project_id, locale_keys_tuple, phraseapp_locale_ids_dict, report_paths_dict
+
+
+def _get_localization_key(file_path):
+  dash_index = file_path.find("-")
+  if dash_index > 0:
+    slash_index = file_path.find("/", dash_index)
+    return file_path[dash_index + 1:slash_index], False
+  else:
+    return "en", True
 
 
 def generate_functional_test_results(report_path):
