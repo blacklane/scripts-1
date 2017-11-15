@@ -29,7 +29,7 @@ def testAcceptance() {
           sh "defaults write com.apple.iphonesimulator ConnectHardwareKeyboard 0"
           BUILD_STATUS = sh ( 
             script: "bash -l -c \"xcodebuild -workspace DriverApp.xcworkspace -scheme AcceptanceTests " +
-                    "-destination 'platform=iOS Simulator,name=iPhone SE,OS=10.3.1' test CODE_SIGN_IDENTITY='' CODE_SIGNING_REQUIRED=NO | " +
+                    "-destination 'platform=iOS Simulator,name=iPhone SE,OS=10.3.1' test | " +
                     "tee test_results.log | " +
                     "xcpretty --report html --output test_results.html\"",
             returnStdout: true 
