@@ -25,8 +25,8 @@ def testAcceptance() {
       timeout(time: 90, unit: 'MINUTES') {
         echo 'Running iOS tests...'
         try {
-          echo 'Ensure the simulator hardware keyboard off'
-          sh "defaults write com.apple.iphonesimulator ConnectHardwareKeyboard 0"
+          echo 'Ensure the simulator hardware keyboard on'
+          sh "defaults write com.apple.iphonesimulator ConnectHardwareKeyboard 1"
           BUILD_STATUS = sh ( 
             script: "bash -l -c \"xcodebuild -workspace Blacklane.xcworkspace -scheme BlacklaneAcceptanceTests " +
                     "-destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3.1' test | " +
