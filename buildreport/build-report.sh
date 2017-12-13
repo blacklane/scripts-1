@@ -81,9 +81,14 @@ cp "app/src/main/res/values-de/strings.xml" "$REPORT_PATH/localization/values-de
 cp "app/src/main/res/values-fr/strings.xml" "$REPORT_PATH/localization/values-fr/strings.xml"
 cp ".phraseapp.yml" "$REPORT_PATH/localization"
 
+RELEASE_APK="app/build/outputs/apk/app-release.apk"
+if [ ! -f $RELEASE_APK ]; then
+    RELEASE_APK="app/build/outputs/apk/release/app-release.apk"
+fi
+
 # copy new apk
 echo "Copying new apk"
-cp "app/build/outputs/apk/app-release.apk" "$REPORT_PATH/new/app.apk"
+cp $RELEASE_APK "$REPORT_PATH/new/app.apk"
 echo "Unzipping new apk"
 unzip "$REPORT_PATH/new/app.apk" -d "$REPORT_PATH/new" > "$REPORT_PATH/new/log.txt"
 
@@ -92,7 +97,7 @@ git checkout master
 echo "Building current apk"
 ./gradlew clean assembleRelease > "$REPORT_PATH/current/log.txt"
 echo "Copying current apk"
-cp "app/build/outputs/apk/app-release.apk" "$REPORT_PATH/current/app.apk"
+cp $RELEASE_APK "$REPORT_PATH/current/app.apk"
 echo "Unzipping current apk"
 unzip "$REPORT_PATH/current/app.apk" -d "$REPORT_PATH/current" >> "$REPORT_PATH/current/log.txt"
 
