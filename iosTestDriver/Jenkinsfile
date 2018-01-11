@@ -25,8 +25,8 @@ def testAcceptance() {
       timeout(time: 30, unit: 'MINUTES') {
         echo 'Running iOS tests...'
         try {
-          echo 'Ensure the simulator hardware keyboard off'
-          sh "defaults write com.apple.iphonesimulator ConnectHardwareKeyboard 1"
+          echo 'Launch simulator manually'
+          sh "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
           BUILD_STATUS = sh ( 
             script: "bash -l -c \"xcodebuild -workspace DriverApp.xcworkspace -scheme AcceptanceTests " +
                     "-destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3.1' test | " +
