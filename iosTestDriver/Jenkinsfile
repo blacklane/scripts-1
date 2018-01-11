@@ -22,7 +22,7 @@ def testAcceptance() {
     }
 
     stage ('Start iOS tests') {
-      timeout(time: 30, unit: 'MINUTES') {
+      timeout(time: 45, unit: 'MINUTES') {
         echo 'Running iOS tests...'
         try {
           echo 'Launch simulator manually'
