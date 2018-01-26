@@ -39,6 +39,9 @@ def testAcceptance() {
         } finally {
           echo 'Killing the simulator...'
           sh "killall \"Simulator\""
+
+          echo 'Remove simulator cookies'
+          sh "rm -rf  ~/Library/Developer/CoreSimulator/Devices/A99AF446-D06B-486E-88C4-AE7D6E7B55FB/data/Library/Cookies/Cookies.binarycookies"
         }
       }
     }
