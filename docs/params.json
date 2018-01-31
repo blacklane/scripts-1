@@ -1,0 +1,6 @@
+{
+  "name": "Blacklink",
+  "tagline": "",
+  "body": "### Welcome to BlackLink Demo.\r\nUse the links below to test out different deeplink scenarios.\r\n\r\n### Custom scheme\r\n[blacklane://splash](blacklane://splash)\r\n\r\n### Direct link\r\n[intent://www.blacklane.com#Intent;scheme=https;package=com.blacklane.passenger.dev;end](intent://www.blacklane.com#Intent;scheme=https;package=com.blacklane.passenger.dev;end)\r\n\r\n### App indexing (Digital Asset Link)\r\ntodo.\r\n\r\n### Dynamic link Firebase\r\ntodo.\r\n\r\n### Dynamic link Adjust\r\ntodo.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}

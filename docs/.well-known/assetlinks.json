@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { 
+    "namespace": "android_app",
+    "package_name": "com.blacklane.passenger.dev",
+    "sha256_cert_fingerprints": ["7A:92:D6:AA:F6:8D:F3:41:D7:1F:6E:45:DC:EE:4B:84:52:69:80:0D:96:93:EF:47:4F:9E:C5:EE:C7:E4:22:D4"]
+  }
+}]

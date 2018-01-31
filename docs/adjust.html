@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>adjust deeplinking...</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+        <meta name="viewport" content="width=640, user-scalable=yes" />
+    </head>
+    <body>
+        <script>
+
+            start = Date.now();
+            function try_close(){
+                location.replace('about:blank');
+            }
+
+            function store_or_close(){
+                now = Date.now();
+                if (now - start > 3000) {
+                    try_close();
+                } else {
+                    window.location.replace("market://details?id=com.blacklane.passenger&referrer=adjust_reftag%3Dc7134qTZw8q3X%26utm_source%3DSMS");
+                    setInterval(function () {
+                        try_close();
+                    }, 1000);
+                }
+            }
+
+            setInterval(function () {
+                store_or_close();
+            }, 2000);
+
+        </script>
+
+        <iframe style="display:none" height=0 width=0 src="blacklane://?adjust_reftag=c7134qTZw8q3X"></iframe>
+        
+    </body>
+</html>

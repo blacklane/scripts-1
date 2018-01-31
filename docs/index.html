@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Blacklink by oguzbabaoglu</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="wrapper">
+    <header>
+        <h1>Blacklink</h1>
+        <p></p>
+
+        <p class="view"><a href="https://github.com/oguzbabaoglu/blacklink">View the Project on GitHub
+            <small>oguzbabaoglu/blacklink</small>
+        </a></p>
+
+
+        <ul>
+            <li><a href="https://github.com/oguzbabaoglu/blacklink/zipball/master">Download <strong>ZIP
+                File</strong></a></li>
+            <li><a href="https://github.com/oguzbabaoglu/blacklink/tarball/master">Download <strong>TAR
+                Ball</strong></a></li>
+            <li><a href="https://github.com/oguzbabaoglu/blacklink">View On <strong>GitHub</strong></a></li>
+        </ul>
+    </header>
+    <section>
+        <h3>Welcome to BlackLink Demo.</h3>
+        <p>Use the links below to test out different deeplinks from a mobile phone.</p>
+        <p>Use <a href="desktop.html">this page</a> to test responses from terminal.</p>
+
+        <br/><h3>Url handling (App links)</h3>
+        <p>
+            App can be configured to handle "<a href="https://www.blacklane.com/">https://www.blacklane.com/</a>" links.
+            <br/>This will display a picker asking you if you want to open the app.
+            <br/>For Android 6.0+, we can skip the picker by verifying the site.
+            <br/>There is no server-side to this, and it is an Android-only feature.
+        </p>
+        
+        <br/><h3>iOS Universal links</h3>
+        <p>
+            Staging: <a href="https://yxwt.adj.st/">https://yxwt.adj.st/</a>
+            <br/>Production:  <a href="https://glds.adj.st/">https://glds.adj.st</a>
+            <br/>Tracker: <a href="https://yxwt.adj.st/?adjust_t=z0zddd">https://yxwt.adj.st/?adjust_t=z0zddd</a>
+            <br/>RateRide: <a href="https://yxwt.adj.st/rides/rate?booking_number=20170213-1863442&amp;adjust_t=z0zddd">https://yxwt.adj.st/rides/rate?booking_number=20170213-1863442&amp;adjust_t=z0zddd</a>
+            <br/><br/>Web AB test: <a href="https://glds.adj.st/?adjust_t=v7k88x&adjust_deeplink=blacklane%3A%2F%2F&adjust_campaign=&adjust_adgroup=&adjust_creative=">https://glds.adj.st/?adjust_t=v7k88x&amp;adjust_deeplink=blacklane%3A%2F%2F&amp;adjust_campaign=&amp;adjust_adgroup=&amp;adjust_creative=</a>
+        </p>
+
+        <br/><h3>URI scheme</h3>
+        <p>
+            Either fails with error or does nothing when app is not installed.
+            <br/> We can't link directly to this, as we won't know if the app is installed.
+        </p>
+        <p>  
+            Installed app: <a href="blacklane://">blacklane://</a>
+            <br/>No app: <a href="noapp://">noapp://</a>
+        </p>
+
+        <br/><h3>
+            Chrome intent link
+        </h3>
+        <p>
+            Chrome specific link that can handle no installed app case. 
+            <br/>Redirects on the phone to the play store or to a webpage.
+            <br/>Only works on phones with certain browsers <b>!!</b>,
+            <a href="https://blacklane.atlassian.net/wiki/download/attachments/110199095/intent_support.png">See
+                chart.</a>
+            <br/>Play store referrer is only supported with Chrome v53+ See
+            <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=459711">chromium bug-id:459711</a>
+        </p>
+        <p>
+            With play store: 
+            <br/><a href="intent://#Intent;scheme=blacklane;package=com.blacklane.passenger;end">
+            intent://#Intent;scheme=blacklane;package=com.blacklane.passenger;end</a>
+            <br/>With web fallback: 
+            <br/><a href="intent://#Intent;scheme=blacklane;package=com.blacklane.passenger;S.browser_fallback_url=https%3A%2F%2Fwww.blacklane.com%2F;end">intent://#Intent;scheme=blacklane;package=com.blacklane.passenger;S.browser_fallback_url=https%3A%2F%2Fwww.blacklane.com%2F;end</a>
+        </p>
+
+        <br/><h3>Javascript alternative to Chrome intent link</h3>
+        <p>
+            Runs a script on the webpage that redirects to app or play store.
+            <br/>This doesn't work on browsers that accept <b>Chrome intent link</b>.
+        </p>
+        <p>
+            Adjust script: <a href="adjust.html">Run script</a>
+        </p>
+
+        <br/><h3>Dynamic link from Firebase</h3>
+        <p>Firebase handles decision of redirecting to website, app or playstore.</p>
+        <p>  
+            With play store: <a href="https://s5rt4.app.goo.gl/s2hO">https://s5rt4.app.goo.gl/s2hO</a>
+            <br/>With web fallback: <a href="https://s5rt4.app.goo.gl/IqL8">https://s5rt4.app.goo.gl/IqL8</a>
+        </p>
+        
+        <br/><h3>Dynamic link from Branch.io</h3>
+        <p>Branch.io handles decision of redirecting to website, app or playstore.</p>
+        <p>  
+            With play store: <a href="https://jqzw.app.link/6s9Zei6K7v">https://jqzw.app.link/6s9Zei6K7v</a>
+            <br/>With web fallback: <a href="https://jqzw.app.link/v4MeeEZK7v">https://jqzw.app.link/v4MeeEZK7v</a>
+        </p>
+
+        <br/><h3>Dynamic link from Adjust</h3>
+        <p>Adjust handles decision of redirecting to website, app or playstore.</p>
+        <p>  
+            With play store: <a href="https://app.adjust.com/ntqczw?deep_link=blacklane://">https://app.adjust.com/ntqczw?deep_link=blacklane://</a>
+            <br/>With web fallback: <a href="https://app.adjust.com/ntqczw?deep_link=blacklane://&amp;redirect=https%3A%2F%2Fwww.blacklane.com%2F">https://app.adjust.com/ntqczw?deep_link=blacklane://&amp;redirect=https%3A%2F%2Fwww.blacklane.com%2F</a>
+        </p>
+        
+        <br/><h3>Market links</h3>
+        <p>  
+            <a href="market://details?id=com.blacklane.passenger&amp;referrer=adjust_reftag%3DcvUmgdnRUjY5R%26utm_source%3DDeep%2BLinking">market://details?id=com.blacklane.passenger&amp;referrer=adjust_reftag%3DcvUmgdnRUjY5R%26utm_source%3DDeep%2BLinking</a>
+            <a href="intent://?adjust_reftag=cXq1XNkyZhsH2#Intent;scheme=blacklane;package=com.blacklane.passenger;end">intent://?adjust_reftag=cXq1XNkyZhsH2#Intent;scheme=blacklane;package=com.blacklane.passenger;end</a>
+            <a href="https://play.google.com/store/apps/details?id=com.blacklane.passenger&amp;referrer=adjust_reftag%3DcvUmgdnRUjY5R%26utm_source%3DDeep%2BLinking">https://play.google.com/store/apps/details?id=com.blacklane.passenger&amp;referrer=adjust_reftag%3DcvUmgdnRUjY5R%26utm_source%3DDeep%2BLinking</a>
+        </p>
+
+    </section>
+    <footer>
+        <p>This project is maintained by <a href="https://github.com/oguzbabaoglu">oguzbabaoglu</a></p>
+        <p>
+            <small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a>
+            </small>
+        </p>
+    </footer>
+</div>
+<script src="javascripts/scale.fix.js"></script>
+
+</body>
+</html>
