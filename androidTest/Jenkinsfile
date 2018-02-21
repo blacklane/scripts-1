@@ -46,7 +46,7 @@ def testAcceptance(usenode) {
      }
    
     stage ('Create results folder and Run tests') {
-      timeout(time: 40, unit: 'MINUTES') {
+      timeout(time: 60, unit: 'MINUTES') {
         sh "mkdir -p results"
 
         echo "Running acceptance tests..."
@@ -73,7 +73,7 @@ def sendBuildEmail(usenode) {
   node(usenode) {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
-    $to = ('sofia.vistas@blacklane.com, matthew.bogott@blacklane.com')
+    $to = ('matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
   }
 }
