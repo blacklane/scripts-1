@@ -26,6 +26,15 @@ def fail_if_not_all_keys_added_on_phraseapp(locale_keys, result, github_token, r
 
 
 def _get_issue_url(github_token, repo, branch_name):
+  if github_token is None:
+    print "WARNING: Can't post githib comment. Github token is not provided"
+  if repo is None:
+    print "WARNING: Can't post githib comment. Repository name is not provided"
+  if branch_name is None:
+    print "WARNING: Can't post githib comment. Branch name is not provided"
+  if github_token is None or repo is None or branch_name is None:
+    return None
+
   url = "https://api.github.com/repos/blacklane/{0}/pulls?head=blacklane:{1}".format(repo, branch_name)
   print "Get PR info from github url : " + url
 
