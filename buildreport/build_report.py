@@ -2,11 +2,11 @@ import getopt
 
 from bs4 import BeautifulSoup
 import subprocess
+
+import phraseappdiff
 from apk_info import ApkInfo
 import sys
 import os.path
-from localization import localization_report
-import yaml  # pip install PyYAML
 
 
 REPORT_PATH = ''
@@ -263,48 +263,7 @@ def generate_apk_info():
 
 
 def generate_localization_report():
-  project_id, locale_keys_tuple, phraseapp_locale_ids_dict, report_paths_dict = _parse_phraseapp_yaml()
-  write(localization_report.report(GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN,
-                                   project_id,  # Phraseapp project id
-                                   locale_keys_tuple,  # ("en", "de", "fr")
-                                   phraseapp_locale_ids_dict,  # Phraseapp locale ids
-                                   report_paths_dict)
-        )
-
-
-def _parse_phraseapp_yaml():
-  with open(REPORT_PATH + "/localization/.phraseapp.yml", 'r') as stream:
-    loaded_yaml = yaml.load(stream)
-    project_id = loaded_yaml["phraseapp"]["project_id"]
-    pull_targets = loaded_yaml["phraseapp"]["pull"]["targets"]
-
-    locale_keys = []
-    phraseapp_locale_ids_dict = {}
-    report_paths_dict = {}
-    for target in pull_targets:
-      target_file = target["file"]
-      locale_key, is_default = _get_localization_key(target_file)
-      locale_keys.append(locale_key)
-      phraseapp_locale_ids_dict[locale_key] = target["params"]["locale_id"]
-      report_paths_dict[locale_key] = REPORT_PATH + "/localization/values{0}/strings.xml"\
-        .format("" if is_default else "-" + locale_key)
-
-    locale_keys_tuple = tuple(locale_keys)
-    print "project_id = {0}".format(project_id)
-    print "locale keys = {0}".format(locale_keys_tuple)
-    print "phraseapp locales ids = {0}".format(phraseapp_locale_ids_dict)
-    print "report paths = {0}".format(report_paths_dict)
-
-    return project_id, locale_keys_tuple, phraseapp_locale_ids_dict, report_paths_dict
-
-
-def _get_localization_key(file_path):
-  dash_index = file_path.find("-")
-  if dash_index > 0:
-    slash_index = file_path.find("/", dash_index)
-    return file_path[dash_index + 1:slash_index], False
-  else:
-    return "en", True
+  write(phraseappdiff.report_html(GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN))
 
 
 def generate_functional_test_results(report_path):

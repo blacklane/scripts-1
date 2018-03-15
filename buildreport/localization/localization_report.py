@@ -40,7 +40,8 @@ import result_checker
 #
 # @return A string with the report formatted by report_generator_module.
 def report(github_token, repo, branch_name, phraseapp_access_token, project_id, locale_keys,
-           locale_ids_by_keys, string_files_by_keys, report_generator_module="localization.html_report_generator"):
+           locale_ids_by_keys, string_files_by_keys, report_generator_module="localization.html_report_generator",
+           is_strict=True):
   _check_parameters(phraseapp_access_token, project_id, locale_keys, locale_ids_by_keys, string_files_by_keys)
 
   _, extension = splitext(string_files_by_keys[locale_keys[0]])
@@ -64,10 +65,9 @@ def report(github_token, repo, branch_name, phraseapp_access_token, project_id, 
     del diff[strings_resources_comparator.SAME_KEY_DIFFERENT_VALUES]
     result[default_locale_key + "-" + locale_key] = diff
 
-  print str(result)
-
   # Check result
-  result_checker.fail_if_not_all_keys_added_on_phraseapp(locale_keys, result, github_token, repo, branch_name)
+  if is_strict:
+    result_checker.fail_if_not_all_keys_added_on_phraseapp(locale_keys, result, github_token, repo, branch_name)
 
   return importlib.import_module(report_generator_module).generate_report(locale_keys, result)
 
