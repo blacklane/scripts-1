@@ -48,7 +48,7 @@ def report_html(github_token, repo, branch_name, phraseapp_token, is_strict=True
   _makedir_if_not_exists(WORKING_DIR)
   _makedir_if_not_exists(OUTPUT_PATH)
 
-  project_id, locale_keys_tuple, phraseapp_locale_ids_dict, report_paths_dict = _parse_phraseapp_yaml()
+  project_id, locale_keys_tuple, phraseapp_locale_ids_dict, string_files_paths_dict = _parse_phraseapp_yaml()
 
   _load_localization_scripts()
 
@@ -60,7 +60,7 @@ def report_html(github_token, repo, branch_name, phraseapp_token, is_strict=True
     project_id,  # Phraseapp project id
     locale_keys_tuple,  # eg ("en", "de", "fr")
     phraseapp_locale_ids_dict,  # Phraseapp locale ids
-    report_paths_dict,  # Paths to the resource files in the working dir
+    string_files_paths_dict,  # Paths to the resource files in the working dir
     is_strict=is_strict
   )
 
@@ -136,7 +136,7 @@ def _parse_phraseapp_yaml():
 
     locale_keys = []
     phraseapp_locale_ids_dict = {}
-    report_paths_dict = {}
+    string_files_paths_dict = {}
     for target in pull_targets:
       target_file = target["file"]
       locale_key, is_default = _get_localization_key(target_file)
@@ -145,18 +145,17 @@ def _parse_phraseapp_yaml():
 
       # Copy the project resource file to the working directory to parse it later
       locale_postfix = "" if is_default else "-" + locale_key  # Default locale directory doesn't have postfix
-      resource_dir = join(WORKING_DIR, "values{0}".format(locale_postfix))
-      _makedir_if_not_exists(resource_dir)  # Create temporary directory where resource file will be copied
-      copy(join(project_dir, target_file), resource_dir)
-      report_paths_dict[locale_key] = join(resource_dir, "strings.xml")  # Save the file path by locale key
+      path = join(WORKING_DIR, "strings{0}.xml".format(locale_postfix))
+      copy(join(project_dir, target_file), path)
+      string_files_paths_dict[locale_key] = path  # Save the file path by locale key
 
     locale_keys_tuple = tuple(locale_keys)
     print "project_id = {0}".format(project_id)
     print "locale keys = {0}".format(locale_keys_tuple)
     print "phraseapp locales ids = {0}".format(phraseapp_locale_ids_dict)
-    print "report paths = {0}".format(report_paths_dict)
+    print "string files paths = {0}".format(string_files_paths_dict)
 
-    return project_id, locale_keys_tuple, phraseapp_locale_ids_dict, report_paths_dict
+    return project_id, locale_keys_tuple, phraseapp_locale_ids_dict, string_files_paths_dict
 
 
 def _get_localization_key(file_path):
