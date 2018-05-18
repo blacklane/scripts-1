@@ -219,17 +219,6 @@ def generate_apk_info():
   )
   write("<tr><td><b>Method Count</b></td><td>" + method_count_text + "</td></tr>")
 
-  # Accessors count
-  current_accessors_count = current_apk_info.accessors_count()
-  new_accessors_count = new_apk_info.accessors_count()
-  accessors_count_text = apk_info_row(
-      current_accessors_count,
-      (new_accessors_count - current_accessors_count),
-      new_accessors_count,
-      "-"
-  )
-  write("<tr><td><b>Accessors Count</b></td><td>" + accessors_count_text + "</td></tr>")
-
   # APK Size
   apk_size_text = apk_info_row(
       current_apk_info.apk_size_in_mb_formatted(),
