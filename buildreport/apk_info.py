@@ -5,18 +5,16 @@ import subprocess
 class ApkInfo:
   package_name = None
   method_count = None
-  accessors = None
   apk_size = None
   permissions = None
   max_count = None
   min_sdk_version = None
   target_sdk_version = None
 
-  def __init__(self, package_name=None, method_count=0, accessors=None,
-               apk_size=0, permissions=None, min_sdk=0, target_sdk=0):
+  def __init__(self, package_name=None, method_count=0, apk_size=0,
+               permissions=None, min_sdk=0, target_sdk=0):
     self.package_name = package_name
     self.method_count = method_count
-    self.accessors = accessors
     self.apk_size = apk_size
     self.permissions = permissions
     self.max_count = 65536
@@ -43,13 +41,6 @@ class ApkInfo:
         stdout=subprocess.PIPE
     ).stdout.read().strip()
 
-    # Accessors
-    accessors = subprocess.Popen(
-        'dex-method-list ' + apk_path + ' | \grep -e \'' + package_name + '.*access\$\'',
-        shell=True,
-        stdout=subprocess.PIPE
-    ).stdout.read().split("\n")
-
     # Apk size
     apk_size = os.path.getsize(apk_path)
 
@@ -66,7 +57,7 @@ class ApkInfo:
     min_sdk = ApkInfo.sdk_version(apk_path, 'minSdkVersion')
     target_sdk = ApkInfo.sdk_version(apk_path, 'targetSdkVersion')
 
-    return cls(package_name, method_count, accessors, apk_size, permissions, min_sdk, target_sdk)
+    return cls(package_name, method_count, apk_size, permissions, min_sdk, target_sdk)
 
   @staticmethod
   def sdk_version(apk_path, name):
@@ -81,7 +72,6 @@ class ApkInfo:
   def __str__(self):
     return "package_name : " + str(self.package_name) + \
            ", method_count : " + str(self.method_count) + \
-           ", accessors_count : " + str(self.accessors_count()) + \
            ", apk_size : " + str(self.apk_size) + \
            ", permissions : " + str(self.permissions)
 
@@ -116,9 +106,6 @@ class ApkInfo:
         list.append(PermissionInfo.deleted(permission))
 
     return list
-
-  def accessors_count(self):
-    return len(self.accessors) - 1
 
 
 class PermissionInfo:
