@@ -73,7 +73,7 @@ def sendBuildEmail(usenode) {
   node(usenode) {
     $subject = 'Pepper Acceptance Tests daily digest!'
     $body = readFile 'email-report.html'
-    $to = ('matthew.bogott@blacklane.com, mauricio.martinez@blacklane.com')
+    $to = ('mauricio.martinez@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
   }
 }
