@@ -1,14 +1,3 @@
-TEST_PACKAGE="com.blacklane.driver.test.acceptance"
-RUNNER="com.blacklane.driver.test.RxJUnitRunner"
-APP_ID="com.blacklane.driver.dev"
-
-EMULATOR_PORT="5554"// must be an even number between 5554-5584
-
-EMULATOR_ID="emulator-${EMULATOR_PORT}"
-
-EMULATOR_AVD="API_25_Acceptance_Tests"
-
-
 start()
 def start() {
   usenode = 'acceptance'
@@ -36,14 +25,6 @@ def testAcceptance(usenode) {
       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/blacklane/salt/']]])
       echo 'Workspace is at: ' + env.BUILD_URL + 'execution/node/3/ws/'
     }
-
-
-    // Start emulator only if there isn't connected device
-    stage ('Start emulators') {
-      sh "curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/androidTest/wait_for_emulator.sh -o wait_for_emulator.sh"
-      sh "chmod +x wait_for_emulator.sh"
-      sh "./wait_for_emulator.sh ${EMULATOR_PORT} ${EMULATOR_AVD}"
-     }
 
     stage ('Create results folder and Run tests') {
       timeout(time: 40, unit: 'MINUTES') {
