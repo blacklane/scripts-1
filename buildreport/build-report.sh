@@ -67,23 +67,5 @@ curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport
 echo "Fetching apk_info.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/apk_info.py -o "$REPORT_PATH/apk_info.py"
 
-
-RELEASE_APK="app/build/outputs/apk/release/app-release.apk"
-
-# unzip new apk
-echo "Unzipping new apk"
-unzip $RELEASE_APK -d "$REPORT_PATH/new" > "$REPORT_PATH/new/log.txt"
-
-# build apk from master and fetch apk info
-git checkout master
-
-echo "Building current apk"
-./gradlew clean assembleRelease > "$REPORT_PATH/current/log.txt"
-echo "Unzipping current apk"
-unzip $RELEASE_APK -d "$REPORT_PATH/current" >> "$REPORT_PATH/current/log.txt"
-
-# go back to original branch before build report
-git checkout -
-
 echo "Building report"
 python "$REPORT_PATH/build_report.py" --report=$REPORT_PATH --package=$PACKAGE_NAME --githubtoken=$GITHUB_TOKEN --repo=$REPO_NAME --branch=$BRANCH_NAME --phraseapptoken=$PHRASEAPP_TOKEN

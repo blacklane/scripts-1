@@ -202,8 +202,14 @@ def apk_info_row(current, change, new, remaining):
 
 
 def generate_apk_info():
-  current_apk_info = ApkInfo.new_info('report/current', PACKAGE_NAME)
-  new_apk_info = ApkInfo.new_info('report/new', PACKAGE_NAME)
+  print "Generating current APK info"
+  # release apk (app-release.apk) is copied to /var/tmp/[REPOSITORY_NAME] upon merge to master
+  # see deployMaster() function in Jenkinsfile of Android projects (pepper and salt)
+  current_apk_path = '/var/tmp/' + REPO
+  current_apk_info = ApkInfo.new_info(current_apk_path, PACKAGE_NAME)
+  print "Generating new APK info"
+  new_apk_path = 'app/build/outputs/apk/release'
+  new_apk_info = ApkInfo.new_info(new_apk_path, PACKAGE_NAME)
 
   write("<table>")
 

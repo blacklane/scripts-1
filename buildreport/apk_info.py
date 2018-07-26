@@ -1,5 +1,6 @@
 import os
 import subprocess
+import zipfile
 
 
 class ApkInfo:
@@ -23,6 +24,11 @@ class ApkInfo:
 
   @classmethod
   def new_info(cls, apk_folder_path, package_name):
+    apk_path = apk_folder_path + "/app-release.apk"
+
+    # unzip apk
+    with zipfile.ZipFile(apk_path,"r") as apk_file:
+        apk_file.extractall(apk_folder_path)
 
     classes_dex_path = apk_folder_path + '/classes.dex'
     method_count = subprocess.Popen(
@@ -32,8 +38,6 @@ class ApkInfo:
     ).stdout.read()
 
     method_count = long(float(method_count))
-
-    apk_path = apk_folder_path + "/app.apk"
 
     package_name = package_name if package_name else subprocess.Popen(
         'aapt dump badging ' + apk_path + ' | awk -v FS="\'" \'/package: name=/{print $2}\'',
