@@ -261,24 +261,6 @@ def generate_localization_report():
   write(phraseappdiff.report_html(GITHUB_TOKEN, REPO, BRANCH_NAME, PHRASEAPP_TOKEN))
 
 
-def generate_functional_test_results(report_path):
-  total_elapsed_time = runShell('grep "Time" '+ report_path +' ')
-  write('<h4>' + total_elapsed_time + '</h4>')
-
-  total_test_count = runShell('grep "OK (" '+ report_path +' ')
-  write('<h4>' + total_test_count + '</h4>')
-
-  tested_classes = runShell('grep '+ PACKAGE_NAME +' '+ report_path +' ')
-  tested_classes = tested_classes.split('\n')
-
-  write('<ul>')
-  for tested_class in tested_classes:
-    if tested_class == '' :
-      continue
-    write('<li>' + tested_class + '</li>')
-  write('</ul>')
-
-
 if __name__ == '__main__':
   read_args(sys.argv[1:])
 
@@ -312,12 +294,6 @@ with open(REPORT_PATH + '/build-report.html', 'w+') as file:
   print "Generating unit test report"
   add_header("Unit Tests")
   generate_unit_tests()
-
-  functional_tests_path=REPORT_PATH+"/android-test-log.txt"
-  if os.path.isfile(functional_tests_path):
-    print "Generating functional test report"
-    add_header("Functional Tests")
-    generate_functional_test_results(functional_tests_path)
 
   print "Build report is generated at " + REPORT_PATH + "/build-report.html"
   write('</body></html>')
