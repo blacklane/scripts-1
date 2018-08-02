@@ -55,9 +55,6 @@ cp app/build/reports/lint-results-debug.html "$REPORT_PATH/lint.html"
 echo "Copy unit tests report"
 cp app/build/reports/tests/testDebugUnitTest/index.html "$REPORT_PATH/unittests.html"
 
-echo "Copy android instrumented test results"
-cp android-test-log.txt "$REPORT_PATH/android-test-log.txt"
-
 echo "Fetching build_report.py"
 curl https://raw.githubusercontent.com/blacklane/zulu-scripts/master/buildreport/build_report.py -o "$REPORT_PATH/build_report.py"
 
