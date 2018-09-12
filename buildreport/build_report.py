@@ -206,10 +206,9 @@ def generate_apk_info():
   # release apk (app-release.apk) is uploaded to AWS S3 ('bl-jenkins-artifacts' bucket) upon merge to master
   # and it is downloaded when building a PR (right before generating the build report)
   # see deployMaster() and 'generate build report' stage in Jenkinsfile of Android projects (pepper and salt)
-  current_apk_info = ApkInfo.new_info('app-release.apk', PACKAGE_NAME)
+  current_apk_info = ApkInfo.new_info(REPORT_PATH, PACKAGE_NAME)
   print "Generating new APK info"
-  new_apk_path = 'app/build/outputs/apk/release'
-  new_apk_info = ApkInfo.new_info(new_apk_path, PACKAGE_NAME)
+  new_apk_info = ApkInfo.new_info('app/build/outputs/apk/release', PACKAGE_NAME)
 
   write("<table>")
 

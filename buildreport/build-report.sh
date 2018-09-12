@@ -38,13 +38,8 @@ elif [[ -z ${REPO_NAME} ]]; then
     exit 1
 fi
 
-rm -R "$REPORT_PATH/current/"
-rm -R "$REPORT_PATH/new/"
-
 mkdir "$REPORT_PATH"
 mkdir "$REPORT_PATH/localization"
-mkdir "$REPORT_PATH/current"
-mkdir "$REPORT_PATH/new"
 
 echo "Copy checkstyle report"
 cp app/build/reports/checkstyle/checkstyle.html "$REPORT_PATH/checkstyle.html"
