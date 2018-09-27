@@ -210,7 +210,7 @@ def generate_coverage_report():
       return
 
   print "Generating coverage test report"
-  add_header("Coverage Report")    
+  add_header("Coverage Report")
   soup = get_soup(REPORT_PATH + "/coveragetests.html")
 
   #get coverage table
@@ -243,9 +243,11 @@ def generate_coverage_report():
   delete_column(2, td_count, td_step,div_table)
 
   # remove any href links in the table
-  links = div_table.find_all('a')
+  links = div_classes.find_all('a')
   for a in links:
-    a.replaceWithChildren()
+    a.wrap(soup.new_tag('td'))
+    a.insert_after(str(a.string))
+    a.extract()
 
   write(str(div_table))
 
