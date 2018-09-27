@@ -206,6 +206,11 @@ def delete_column(index_to_remove, td_count, td_step, div_parent):
 
 
 def generate_coverage_report():
+  if not os.path.isfile(REPORT_PATH + "/coveragetests.html"):
+      return
+
+  print "Generating coverage test report"
+  add_header("Coverage Report")    
   soup = get_soup(REPORT_PATH + "/coveragetests.html")
 
   #get coverage table
@@ -345,8 +350,6 @@ with open(REPORT_PATH + '/build-report.html', 'w+') as file:
   add_header("Unit Tests")
   generate_unit_tests()
 
-  print "Generating coverage test report"
-  add_header("Coverage Report")
   generate_coverage_report()
 
   print "Build report is generated at " + REPORT_PATH + "/build-report.html"
