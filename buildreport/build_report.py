@@ -243,11 +243,9 @@ def generate_coverage_report():
   delete_column(2, td_count, td_step,div_table)
 
   # remove any href links in the table
-  links = div_classes.find_all('a')
+  links = div_table.find_all('a')
   for a in links:
-    a.wrap(soup.new_tag('td'))
-    a.insert_after(str(a.string))
-    a.extract()
+    del a['href']
 
   write(str(div_table))
 
