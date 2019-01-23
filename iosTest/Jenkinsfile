@@ -55,7 +55,7 @@ def sendBuildEmail() {
   node('acceptance') {
     $subject = 'Cassandra Acceptance Tests: Daily Report'
     $body = '<p>Check results using link ' + env.BUILD_URL + '</p><p>HTML Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.html</p><p>Text Log Report: ' + env.BUILD_URL + 'execution/node/3/ws/test_results.log</p>'
-    $to = ('mauricio.martinez@blacklane.com')
+    $to = ('matthew.bogott@blacklane.com')
     emailext attachLog:false, body:$body, subject:$subject, to:$to, mimeType:'text/html'
   }
 }
