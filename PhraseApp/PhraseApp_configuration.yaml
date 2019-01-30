@@ -1,0 +1,9 @@
+---
+:API_ACCESS_TOKEN: PLEASE_PROVIDE_YOUR_TOKEN
+:project_ios: PLEASE_PROVIDE_ID
+:project_android: PLEASE_PROVIDE_ID
+:ios_keys:
+  - key.name.ios.example
+:android_keys:
+  - key.name.android.example
+:migrate_from_ios_to_android: true
