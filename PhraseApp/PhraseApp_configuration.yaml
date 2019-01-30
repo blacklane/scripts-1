@@ -7,3 +7,4 @@
 :android_keys:
   - key.name.android.example
 :migrate_from_ios_to_android: true
+:exclude: true

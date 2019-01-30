@@ -2,6 +2,7 @@ require 'phraseapp-ruby'
 require 'yaml'
 
 configuration = YAML.load(File.read("PhraseApp_configuration.yaml"))
+exclude = configuration[:exclude]
 
 if configuration[:migrate_from_ios_to_android]
   project_a_keys = configuration[:ios_keys]
@@ -84,7 +85,7 @@ def fetch_locales(client, project_id)
   return locales
 end
 
-def apply(client, project_id, translations, locales, keys)
+def apply(client, project_id, translations, locales, keys, exclude)
     translations.each_with_index do |translation, index|
       key = keys[index]
       translation.each { |t|
@@ -96,7 +97,7 @@ def apply(client, project_id, translations, locales, keys)
               PhraseApp::RequestParams::TranslationParams.new(
                   content: t.content,
                   key_id: key.id,
-                  excluded: t.excluded,
+                  excluded: exclude,
                   locale_id: locale_in_b.id,
                   plural_suffix: t.plural_suffix,
                   unverified: t.unverified
@@ -117,6 +118,6 @@ fetched_keys = fetch_keys(client, project_a, project_a_keys)
 created_keys = create_keys(client, project_b, project_b_keys)
 copied_translations = copy_translations(client, project_a, fetched_keys)
 fetched_locales = fetch_locales(client, project_b)
-apply(client, project_b, copied_translations, fetched_locales, created_keys)
+apply(client, project_b, copied_translations, fetched_locales, created_keys, exclude)
 
 puts "All translations were copied!"
